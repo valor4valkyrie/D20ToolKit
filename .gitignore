@@ -1,0 +1,7 @@
+./idea**
+./idea/**
+.idea/gradle.xml
+.idea/misc.xml
+.idea/D20ToolKit.iml
+.idea/modules.xml
+.idea/workspace.xml
