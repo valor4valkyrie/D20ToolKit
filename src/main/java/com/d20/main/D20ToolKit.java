@@ -1,16 +1,14 @@
 package com.d20.main;
 
+import com.d20.view.MainMenu;
+import com.d20.view.MainMenuInt;
+import com.d20.view.MainView;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
 
-import java.util.Optional;
-
-public class main extends Application{
+public class D20ToolKit extends Application{
 
     @Override
     public void start(Stage primaryStage) {
