@@ -1,12 +1,10 @@
 package com.d20.view;
 
-import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class MainMenu implements MainMenuInt{
@@ -20,12 +18,34 @@ public class MainMenu implements MainMenuInt{
         BorderPane borderPane = new BorderPane();
         Background background1 = new Background(new BackgroundFill(javafx.scene.paint.Color.color(0, 0,  0, 0.6), null, null));
         borderPane.setBackground(background1);
+
+        //MenuBar
         MenuBar menubar = new MenuBar();
         menubar.setPrefWidth(1800);
+
+        //Menus
         Menu file = new Menu("File");
-        MenuItem addFile = new MenuItem("...Add File");
-        file.getItems().add(addFile);
+        Menu dmTools = new Menu("DM Tools");
+
+        //MenuItems
+        MenuItem exit = new MenuItem("Exit");
+        MenuItem loadCharacter = new MenuItem("Load Character");
+        MenuItem newCharacter = new MenuItem("New Character");
+        MenuItem createNPC = new MenuItem("Create NPC");
+        MenuItem createEncounter = new MenuItem("Create Encounter");
+
+        //MenuItems actions
+        exit.setOnAction(e -> Platform.exit());
+        newCharacter.setOnAction(e -> new NewCharacterView().getNewCharacterMenu());
+
+        //Add MenuItems to Menus
+        file.getItems().addAll(newCharacter, loadCharacter, exit);
+        dmTools.getItems().addAll(createNPC, createEncounter);
+
+        //Add Menus to the Menubar
         menubar.getMenus().add(file);
+        menubar.getMenus().add(dmTools);
+
         TabPane tabPane = new TabPane();
         Tab statsPane = new Tab();
         statsPane.setText("Stats");
