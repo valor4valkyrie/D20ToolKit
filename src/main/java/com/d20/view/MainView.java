@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -26,10 +27,16 @@ public class MainView implements MainViewInt{
 
     @Override
     public void setMainScene(Pane pane, boolean fullscreen){
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(getMenuBar());
         borderPane.setCenter(pane);
-        Scene scene = new Scene(borderPane, 800, 800);
+
+        scrollPane.setContent(borderPane);
+        Scene scene = new Scene(scrollPane, 800, 800);
         stage.setScene(scene);
         stage.setFullScreen(fullscreen);
         stage.show();
