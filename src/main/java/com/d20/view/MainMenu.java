@@ -1,18 +1,27 @@
 package com.d20.view;
 
+import com.d20.view.future.FutureView;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainMenu implements MainMenuInt{
+public class MainMenu implements MainMenuInt {
+
+    @Autowired
+    Stage stage;
 
     @Autowired
     MainView view;
+
+    @Autowired
+    FutureView futureView;
 
     private Image ddBackgroundImage = new Image("./images/DDBackground.jpg");
     private BackgroundImage backgroundImage = new BackgroundImage(ddBackgroundImage, BackgroundRepeat.REPEAT,
@@ -20,7 +29,7 @@ public class MainMenu implements MainMenuInt{
 
     public void MainMenu() {}
 
-    public Scene getMainMenu(){
+    public BorderPane getMainMenu(){
 
         //Button Images
         ImageView mutantsImage = new ImageView(new Image("./images/MutantsMasterminds.jpg"));
@@ -44,7 +53,25 @@ public class MainMenu implements MainMenuInt{
         borderPane.setBackground(background);
 
         //Actions for the buttons
-        
+        futureButton.setOnMouseClicked(e -> futureView.newFutureView());
+        futureButton.setOnKeyPressed(e -> {
+            if(e.getCode().toString() == "ENTER"){
+                futureView.newFutureView();
+            }
+        });
+
+        /** Tooltips and Popup windows
+        Tooltip tip = new Tooltip("Future");
+        futureButton.tooltipProperty().setValue(tip);
+        futureButton.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Look, an Information Dialog");
+            alert.setContentText("I have a great message for you!");
+
+            alert.showAndWait();
+        });
+        **/
 
         //FlowPane for the game buttons
         FlowPane flowPane = new FlowPane();
@@ -54,10 +81,8 @@ public class MainMenu implements MainMenuInt{
         Tab statsPane = new Tab();
         statsPane.setText("Stats");
         tabPane.getTabs().add(statsPane);*/
-        borderPane.setTop(view.getMenuBar());
         borderPane.setCenter(flowPane);
-        Scene scene = new Scene(borderPane, 800, 800);
 
-        return scene;
+        return borderPane;
     }
 }

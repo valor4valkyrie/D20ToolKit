@@ -5,9 +5,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.nio.ch.sctp.SctpNet;
 
 @Component
 public class MainView implements MainViewInt{
@@ -16,16 +19,17 @@ public class MainView implements MainViewInt{
     MainMenu menu;
 
     @Autowired
-    NewCharacterView newCharacterView;
-
-    @Autowired
     Stage stage;
 
     public MainView(){
     }
 
     @Override
-    public void setMainScene(Scene scene, boolean fullscreen){
+    public void setMainScene(Pane pane, boolean fullscreen){
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(getMenuBar());
+        borderPane.setCenter(pane);
+        Scene scene = new Scene(borderPane, 800, 800);
         stage.setScene(scene);
         stage.setFullScreen(fullscreen);
         stage.show();
@@ -51,18 +55,16 @@ public class MainView implements MainViewInt{
         //MenuItems
         MenuItem exit = new MenuItem("Exit");
         MenuItem loadCharacter = new MenuItem("Load Character");
-        MenuItem newCharacter = new MenuItem("New Character");
         MenuItem mainMenu = new MenuItem("Main Menu");
         MenuItem createNPC = new MenuItem("Create NPC");
         MenuItem createEncounter = new MenuItem("Create Encounter");
 
         //MenuItems actions
         exit.setOnAction(e -> Platform.exit());
-        newCharacter.setOnAction(e -> newCharacterView.getNewCharacterMenu());
         mainMenu.setOnAction(e -> this.getMainMenu());
 
         //Add MenuItems to Menus
-        file.getItems().addAll(mainMenu, newCharacter, loadCharacter, exit);
+        file.getItems().addAll(mainMenu, loadCharacter, exit);
         dmTools.getItems().addAll(createNPC, createEncounter);
 
         //Add Menus to the Menubar

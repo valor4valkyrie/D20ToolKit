@@ -1,10 +1,10 @@
 package com.d20.main;
 
+import com.d20.model.future.FutureModel;
 import com.d20.view.MainMenu;
 import com.d20.view.MainView;
-import com.d20.view.NewCharacterView;
+import com.d20.view.future.FutureView;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,13 +18,9 @@ public class BeanConfig {
     }
 
     @Bean
-    public MainView mainView(){
-        return new MainView();
-    }
+    public MainView mainView(){ return new MainView(); }
 
     @Bean
     public MainMenu mainMenu(){ return new MainMenu(); }
 
-    @Bean
-    public NewCharacterView newCharacterView(){ return new NewCharacterView(); }
 }
