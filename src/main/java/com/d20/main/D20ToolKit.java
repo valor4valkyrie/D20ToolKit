@@ -30,6 +30,6 @@ public class D20ToolKit extends Application{
 
 
     public static void main(String[] args){
-        launch(args);
+        launch(D20ToolKit.class, args);
     }
 }

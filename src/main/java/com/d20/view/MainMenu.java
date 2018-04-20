@@ -1,11 +1,10 @@
 package com.d20.view;
 
+import com.d20.main.Utilities;
 import com.d20.view.future.FutureView;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ public class MainMenu implements MainMenuInt {
     public void MainMenu() {}
 
     public BorderPane getMainMenu(){
-
         //Button Images
         ImageView mutantsImage = new ImageView(new Image("./images/MutantsMasterminds.jpg"));
         ImageView modernImage = new ImageView(new Image("./images/D20_Modern_Book_Cover.jpg"));

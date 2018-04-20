@@ -23,6 +23,7 @@ public class MainView implements MainViewInt{
     Stage stage;
 
     public MainView(){
+
     }
 
     @Override
