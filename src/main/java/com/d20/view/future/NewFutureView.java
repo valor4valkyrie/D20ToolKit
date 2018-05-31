@@ -5,6 +5,7 @@ import com.d20.model.future.FutureClassDescription;
 import com.d20.view.MainMenu;
 import com.d20.view.MainView;
 import com.d20.view.NewStatsView;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -54,8 +55,12 @@ public class NewFutureView {
         back.setOnMouseClicked(e -> view.setMainScene(mainMenu.getMainMenu(), view.isFullScreen()));
         beginner.setOnMouseClicked(e -> view.setMainScene(classNewCharacter(), view.isFullScreen()));
 
+        back.getStyleClass().add("back-button");
+        back.setPrefSize(225, 300);
+
         flowPane.getChildren().addAll(back, beginner, advanced);
         borderPane.setCenter(flowPane);
+        borderPane.getStylesheets().add("../resources/css/stats.css");
 
         return  borderPane;
     }
@@ -86,6 +91,7 @@ public class NewFutureView {
         descTextArea.setVisible(true);
 
         Label classDescriptionLabel = new Label("Description");
+        classDescriptionLabel.getStyleClass().add("title-text");
 
         //Button Images
         ImageView fastImage = new ImageView(new Image("./images/Future/FutureFastHero.jpeg"));
@@ -103,6 +109,14 @@ public class NewFutureView {
         Button dedicatedHero = new Button("Dedicated Hero", dedicatedImage);
         Button charismaticHero = new Button("Charismatic Hero", charismaticImage);
         Button back = new Button("Back");
+        back.setPrefSize(225, 300);
+
+        fastHero.getStyleClass().add("character-class");
+        strongHero.getStyleClass().add("character-class");
+        toughHero.getStyleClass().add("character-class");
+        smartHero.getStyleClass().add("character-class");
+        dedicatedHero.getStyleClass().add("character-class");
+        charismaticHero.getStyleClass().add("character-class");
 
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
@@ -144,12 +158,15 @@ public class NewFutureView {
             textArea.setText(classDescription.getDedicatedHeroDesc());
         });
         descriptionBox.getChildren().addAll(classDescriptionLabel, textArea);
-        flowPane.getChildren().addAll(back, fastHero, smartHero, strongHero, toughHero, charismaticHero, dedicatedHero);
+        flowPane.getChildren().addAll(fastHero, smartHero, strongHero, toughHero, charismaticHero, dedicatedHero, back);
+        flowPane.setHgap(20);
+        flowPane.setAlignment(Pos.CENTER);
 
         borderPane.setTop(descTextArea);
         borderPane.setCenter(flowPane);
         borderPane.setBottom(descriptionBox);
 
+        back.getStyleClass().add("back-button");
         borderPane.getStylesheets().add("../resources/css/stats.css");
 
         return borderPane;
@@ -166,6 +183,10 @@ public class NewFutureView {
 
         //Button Actions
         back.setOnMouseClicked(e -> view.setMainScene(classNewCharacter(), view.isFullScreen()));
+
+        back.getStyleClass().add("back-button");
+        back.setPrefSize(225, 300);
+        borderPane.getStylesheets().add("../resources/css/stats.css");
 
         flowPane.getChildren().addAll(back, description);
         borderPane.setCenter(flowPane);

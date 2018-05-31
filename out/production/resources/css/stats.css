@@ -10,6 +10,9 @@
     src: url("../fonts/IndieFlower.ttf");
 }
 
+@font-face {
+    src: url("../fonts/sf-outer-limits.regular.ttf");
+}
 .statspane {
     -fx-font-family: "yukarimobile";
     -fx-border-color: black;
@@ -24,6 +27,7 @@
     -fx-border-width: 5;
     -fx-border-insets: 5 5 5 5;
     -fx-border-radius: 15;
+    -fx-background-radius: 15;
 }
 
 .stats-box {
@@ -48,15 +52,38 @@
     -fx-border-color: green;
 }
 
+.title-text {
+    -fx-font-family: "SF Outer Limits";
+    -fx-font-size: 18pt;
+}
 .text-area {
-    -fx-font-family: "Indie Flower";
+    -fx-font-family: "SF Outer Limits";
     -fx-border-color: black;
     -fx-border-width: 5;
     -fx-border-radius: 15;
     -fx-padding: 25;
-    -fx-font-size: 18pt;
+    -fx-font-size: 12pt;
 }
 
 .button {
     -fx-border-radius: 30;
+    -fx-background-radius: 30;
+}
+
+.back-button {
+    -fx-font-family: "SF Outer Limits";
+    -fx-font-size: 18pt;
+    -fx-border-color: gray;
+    -fx-border-width: 3;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+.character-class {
+    -fx-font-family: "SF Outer Limits";
+    -fx-font-size: 18pt;
+    -fx-border-color: gray;
+    -fx-border-width: 3;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
 }
