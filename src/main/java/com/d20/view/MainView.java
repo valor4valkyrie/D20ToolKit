@@ -6,8 +6,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +22,10 @@ public class MainView implements MainViewInt{
     @Autowired
     Stage stage;
 
+    private Image ddBackgroundImage = new Image("./images/DDBackground.jpg");
+    private BackgroundImage backgroundImage = new BackgroundImage(ddBackgroundImage, BackgroundRepeat.REPEAT,
+            BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+
     public MainView(){
 
     }
@@ -31,15 +35,24 @@ public class MainView implements MainViewInt{
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setContent(pane);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(getMenuBar());
-        borderPane.setCenter(pane);
+        borderPane.setCenter(scrollPane);
 
-        scrollPane.setContent(borderPane);
-        Scene scene = new Scene(scrollPane, 800, 800);
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(borderPane);
+/*        Background background = new Background(backgroundImage);;
+        borderPane.setBackground(background);
+        pane.setBackground(background);*/
+
+        Scene scene = new Scene(stackPane,  stage.getWidth(), stage.getHeight());
         stage.setScene(scene);
         stage.setFullScreen(fullscreen);
+        stage.setTitle("D20 Toolkit");
         stage.show();
     }
 
@@ -54,7 +67,7 @@ public class MainView implements MainViewInt{
     public MenuBar getMenuBar(){
         //MenuBar
         MenuBar menubar = new MenuBar();
-        menubar.setPrefWidth(1800);
+        menubar.setPrefWidth(stage.getWidth());
 
         //Menus
         Menu file = new Menu("File");

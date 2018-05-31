@@ -20,4 +20,7 @@ public class ViewConfig {
     @Bean
     public NewFutureView newFutureView(){ return new NewFutureView(); }
 
+    @Bean
+    public NewStatsView newStatsView(){ return new NewStatsView(); }
+
 }

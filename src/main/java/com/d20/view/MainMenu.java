@@ -1,11 +1,12 @@
 package com.d20.view;
 
-import com.d20.main.Utilities;
 import com.d20.view.future.FutureView;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,13 +23,13 @@ public class MainMenu implements MainMenuInt {
     @Autowired
     FutureView futureView;
 
-    private Image ddBackgroundImage = new Image("./images/DDBackground.jpg");
-    private BackgroundImage backgroundImage = new BackgroundImage(ddBackgroundImage, BackgroundRepeat.REPEAT,
-            BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-
     public void MainMenu() {}
 
-    public BorderPane getMainMenu(){
+    public FlowPane getMainMenu(){
+
+        HBox hBox = new HBox();
+        hBox.setSpacing(50);
+
         //Button Images
         ImageView mutantsImage = new ImageView(new Image("./images/MutantsMasterminds.jpg"));
         ImageView modernImage = new ImageView(new Image("./images/D20_Modern_Book_Cover.jpg"));
@@ -44,11 +45,6 @@ public class MainMenu implements MainMenuInt {
         Button spycraftButton = new Button("", spycraftImage);
         Button ddButton = new Button("", ddImage);
         Button pathfinderButton = new Button("", pathfinderImage);
-
-        //BorderPane for the whole scene
-        BorderPane borderPane = new BorderPane();
-        Background background = new Background(backgroundImage);
-        borderPane.setBackground(background);
 
         //Actions for the buttons
         futureButton.setOnMouseClicked(e -> futureView.newFutureView());
@@ -73,14 +69,13 @@ public class MainMenu implements MainMenuInt {
 
         //FlowPane for the game buttons
         FlowPane flowPane = new FlowPane();
-        flowPane.getChildren().addAll(pathfinderButton, futureButton, mutantsButton, modernButton, spycraftButton, ddButton);
-
+        hBox.getChildren().addAll(pathfinderButton, futureButton, mutantsButton, modernButton, spycraftButton, ddButton);
+        flowPane.getChildren().add(hBox);
         /*TabPane tabPane = new TabPane();
         Tab statsPane = new Tab();
         statsPane.setText("Stats");
         tabPane.getTabs().add(statsPane);*/
-        borderPane.setCenter(flowPane);
 
-        return borderPane;
+        return flowPane;
     }
 }

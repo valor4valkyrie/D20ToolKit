@@ -10,4 +10,9 @@ public class ModelConfig {
     @Bean
     public FutureModel futureModel(){ return new FutureModel(); }
 
+    @Bean
+    public Stats stats(){
+        return new Stats();
+    }
+
 }
