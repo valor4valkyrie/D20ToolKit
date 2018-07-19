@@ -36,7 +36,7 @@ public class NewFutureView {
     Utilities utilities;
 
     @Autowired
-    NewStatsView newStatsView;
+    NewFutureStatsView newFutureStatsView;
 
     public NewFutureView(){
     }
@@ -88,6 +88,7 @@ public class NewFutureView {
         descTextArea.getStyleClass().add("text-area");
         descTextArea.setEditable(false);
         descTextArea.setWrapText(true);
+        descTextArea.setPrefRowCount(12);
         descTextArea.setVisible(true);
 
         Label classDescriptionLabel = new Label("Description");
@@ -121,13 +122,14 @@ public class NewFutureView {
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
         textArea.setWrapText(true);
+        textArea.setPrefRowCount(12);
 
         FutureClassDescription classDescription = new FutureClassDescription();
 
         //Button Actions
         back.setOnMouseClicked(e -> view.setMainScene(getNewCharacter(), view.isFullScreen()));
         //--Smart Hero
-        smartHero.setOnMouseClicked(e -> view.setMainScene(newStatsView.getSingleRolledStats(), view.isFullScreen()));
+        smartHero.setOnMouseClicked(e -> view.setMainScene(newFutureStatsView.getGuidedStats(), view.isFullScreen()));
         smartHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getSmartHeroDesc());

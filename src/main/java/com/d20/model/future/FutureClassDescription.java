@@ -84,15 +84,12 @@ public class FutureClassDescription {
     public String getSmartHeroDesc(){
         return smartHeroDesc.toString();
     }
-
     public String getStrongHeroDesc(){
         return strongHeroDesc.toString();
     }
-
     public String getToughHeroDesc(){
         return toughHerDesc.toString();
     }
-
     public String getFastHeroDesc(){
         return fastHeroDesc.toString();
     }

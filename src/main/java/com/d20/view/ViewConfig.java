@@ -1,6 +1,7 @@
 package com.d20.view;
 
 import com.d20.view.future.FutureView;
+import com.d20.view.future.NewFutureStatsView;
 import com.d20.view.future.NewFutureView;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,9 @@ public class ViewConfig {
 
     @Bean
     public NewFutureView newFutureView(){ return new NewFutureView(); }
+
+    @Bean
+    public NewFutureStatsView newFutureStatsView(){ return new NewFutureStatsView();}
 
     @Bean
     public NewStatsView newStatsView(){ return new NewStatsView(); }
