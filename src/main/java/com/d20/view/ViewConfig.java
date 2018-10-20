@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class ViewConfig {
 
     @Bean
-    public MainView mainView(){ return new MainView(); }
-
-    @Bean
     public MainMenu mainMenu(){ return new MainMenu(); }
 
     @Bean

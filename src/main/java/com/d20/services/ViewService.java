@@ -1,5 +1,7 @@
-package com.d20.view;
+package com.d20.services;
 
+import com.d20.view.MainMenu;
+import com.d20.view.future.FutureView;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -10,27 +12,26 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import sun.nio.ch.sctp.SctpNet;
+import org.springframework.stereotype.Service;
 
-@Component
-public class MainView implements MainViewInt{
-
-    @Autowired
-    MainMenu menu;
+@Service
+public class ViewService {
 
     @Autowired
     Stage stage;
+
+    @Autowired
+    FutureView futureView;
+
+    @Autowired
+    private MainMenu mainMenu;
 
     private Image ddBackgroundImage = new Image("./images/DDBackground.jpg");
     private BackgroundImage backgroundImage = new BackgroundImage(ddBackgroundImage, BackgroundRepeat.REPEAT,
             BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 
-    public MainView(){
+    public ViewService(){}
 
-    }
-
-    @Override
     public void setMainScene(Pane pane, boolean fullscreen){
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -57,7 +58,7 @@ public class MainView implements MainViewInt{
     }
 
     public void getMainMenu(){
-        setMainScene(menu.getMainMenu(), true);
+        setMainScene(mainMenu.getMainMenu(), true);
     }
 
     public boolean isFullScreen(){
@@ -94,4 +95,13 @@ public class MainView implements MainViewInt{
 
         return menubar;
     }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public FutureView getFutureView() {
+        return futureView;
+    }
+
 }

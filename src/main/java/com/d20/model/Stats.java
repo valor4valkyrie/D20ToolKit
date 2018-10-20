@@ -1,51 +1,20 @@
 package com.d20.model;
 
-import javax.persistence.*;
-import java.util.Map;
+import org.springframework.stereotype.Component;
 
-@Entity
-@Table(name = "STATS")
+import java.util.*;
+
+@Component
 public class Stats {
 
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-
-    @Column(name = "STAT_STR")
     private Stat strength;
-
-    @Column(name = "STAT_DEX")
     private Stat dexterity;
-
-    @Column(name = "STAT_CON")
     private Stat constitution;
-
-    @Column(name = "STAT_INT")
     private Stat intelligence;
-
-    @Column(name = "STAT_WIS")
     private Stat wisdom;
-
-    @Column(name = "STAT_CHA")
     private Stat charisma;
 
-    public Stats(Map<String, Stat> statMap){
-        strength = statMap.get("Strength");
-        dexterity = statMap.get("Dexterity");
-        constitution = statMap.get("Constitution");
-        intelligence = statMap.get("Intelligence");
-        wisdom = statMap.get("Wisdom");
-        charisma = statMap.get("Charisma");
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    public Stats(){}
 
     public Stat getStrength() {
         return strength;

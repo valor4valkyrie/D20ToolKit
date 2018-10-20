@@ -1,7 +1,7 @@
 package com.d20.main;
 
 import com.d20.model.ModelConfig;
-import com.d20.view.MainView;
+import com.d20.services.ViewService;
 import com.d20.view.ViewConfig;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -23,13 +23,13 @@ public class D20ToolKit extends Application{
         context.register(ViewConfig.class);
         context.refresh();
 
-        MainView mainView = context.getBean(MainView.class);
+        ViewService mainView = context.getBean(ViewService.class);
         mainView.getMainMenu();
 
     }
 
 
-    public static void main(String[] args){
+    public static void main(final String[] args){
         launch(D20ToolKit.class, args);
     }
 }

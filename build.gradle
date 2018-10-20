@@ -26,6 +26,6 @@ dependencies {
 
     compile 'org.apache.commons:commons-dbcp2:2.3.0'
 
-    // Use MySQL Connector-J
-    compile 'mysql:mysql-connector-java'
+     //Use MySQL Connector-J
+     compile 'mysql:mysql-connector-java'
 }

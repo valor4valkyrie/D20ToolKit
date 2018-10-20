@@ -1,63 +1,98 @@
 package com.d20.model;
 
-import org.springframework.stereotype.Component;
-
+import javax.persistence.*;
 import java.util.*;
 
-@Component
+@Entity
+@Table(name = "STATS")
 public class StatsModel {
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private long id;
 
-    private LinkedHashMap<String, Stat> statsMap = new LinkedHashMap<String, Stat>();
+    @Column(name = "STR")
+    private Stat strength;
 
-    private int statsTotal;
+    @Column(name = "DEX")
+    private Stat dexterity;
 
-    private int rollStat(){
-        Random random = new Random();
+    @Column(name = "CON")
+    private Stat constitution;
 
-        int statsTotal = 0;
+    @Column(name = "INT")
+    private Stat intelligence;
 
-        int diceRoll = random.nextInt(6) + 1;
+    @Column(name = "WIS")
+    private Stat wisdom;
 
-        List<Integer> stats = new ArrayList<>();
+    @Column(name = "CHA")
+    private Stat charisma;
 
-        while(stats.size() < 4) {
-            while (diceRoll < 2) {
-                diceRoll = random.nextInt(6) + 1;
-            }
-            stats.add(diceRoll);
-        }
+    public StatsModel(){}
 
-        Collections.sort(stats);
-
-        stats.remove(stats.lastIndexOf(diceRoll));
-
-        for (Integer e : stats) {
-            statsTotal = statsTotal + e;
-        }
-
-        return statsTotal;
+    public StatsModel(Map<String, Stat> statMap){
+        strength = statMap.get("Strength");
+        dexterity = statMap.get("Dexterity");
+        constitution = statMap.get("Constitution");
+        intelligence = statMap.get("Intelligence");
+        wisdom = statMap.get("Wisdom");
+        charisma = statMap.get("Charisma");
     }
 
-    public void rollAllStats(){
-
-        statsMap.put("Strength", new Stat("Strength", rollStat()));
-        statsMap.put("Dexterity", new Stat("Dexterity", rollStat()));
-        statsMap.put("Constitution", new Stat("Constitution", rollStat()));
-        statsMap.put("Intelligence", new Stat("Intelligence", rollStat()));
-        statsMap.put("Wisdom", new Stat("Wisdom", rollStat()));
-        statsMap.put("Charisma", new Stat("Charisma", rollStat()));
-
-        statsTotal = 0;
-        statsMap.entrySet().forEach(s -> {
-            statsTotal = statsTotal + s.getValue().getStat();
-        });
+    public long getId() {
+        return id;
     }
 
-    public Map<String, Stat> getStatsMap(){
-        return statsMap;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public int getStatsTotal() {
-        return statsTotal;
+    public Stat getStrength() {
+        return strength;
+    }
+
+    public void setStrength(Stat strength) {
+        this.strength = strength;
+    }
+
+    public Stat getDexterity() {
+        return dexterity;
+    }
+
+    public void setDexterity(Stat dexterity) {
+        this.dexterity = dexterity;
+    }
+
+    public Stat getConstitution() {
+        return constitution;
+    }
+
+    public void setConstitution(Stat constitution) {
+        this.constitution = constitution;
+    }
+
+    public Stat getIntelligence() {
+        return intelligence;
+    }
+
+    public void setIntelligence(Stat intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public Stat getWisdom() {
+        return wisdom;
+    }
+
+    public void setWisdom(Stat wisdom) {
+        this.wisdom = wisdom;
+    }
+
+    public Stat getCharisma() {
+        return charisma;
+    }
+
+    public void setCharisma(Stat charisma) {
+        this.charisma = charisma;
     }
 }

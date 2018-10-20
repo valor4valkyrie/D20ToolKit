@@ -1,5 +1,6 @@
 package com.d20.view;
 
+import com.d20.services.ViewService;
 import com.d20.view.future.FutureView;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -15,13 +16,7 @@ import org.springframework.stereotype.Component;
 public class MainMenu implements MainMenuInt {
 
     @Autowired
-    Stage stage;
-
-    @Autowired
-    MainView view;
-
-    @Autowired
-    FutureView futureView;
+    private ViewService viewService;
 
     public void MainMenu() {}
 
@@ -47,10 +42,10 @@ public class MainMenu implements MainMenuInt {
         Button pathfinderButton = new Button("", pathfinderImage);
 
         //Actions for the buttons
-        futureButton.setOnMouseClicked(e -> futureView.newFutureView());
+        futureButton.setOnMouseClicked(e -> viewService.getFutureView().newFutureView());
         futureButton.setOnKeyPressed(e -> {
             if(e.getCode().toString() == "ENTER"){
-                futureView.newFutureView();
+                viewService.getFutureView().newFutureView();
             }
         });
 

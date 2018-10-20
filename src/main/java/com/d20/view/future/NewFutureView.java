@@ -2,9 +2,8 @@ package com.d20.view.future;
 
 import com.d20.main.Utilities;
 import com.d20.model.future.FutureClassDescription;
+import com.d20.services.ViewService;
 import com.d20.view.MainMenu;
-import com.d20.view.MainView;
-import com.d20.view.NewStatsView;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,16 +26,13 @@ import java.util.stream.Stream;
 public class NewFutureView {
 
     @Autowired
-    MainView view;
+    private ViewService viewService;
 
     @Autowired
-    MainMenu mainMenu;
+    private Utilities utilities;
 
     @Autowired
-    Utilities utilities;
-
-    @Autowired
-    NewFutureStatsView newFutureStatsView;
+    private NewFutureStatsView newFutureStatsView;
 
     public NewFutureView(){
     }
@@ -52,8 +48,8 @@ public class NewFutureView {
         Button advanced = new Button("Advanced: Let Me Pick Where to Go.", new ImageView(futureImage));
         Button back = new Button("Back");
 
-        back.setOnMouseClicked(e -> view.setMainScene(mainMenu.getMainMenu(), view.isFullScreen()));
-        beginner.setOnMouseClicked(e -> view.setMainScene(classNewCharacter(), view.isFullScreen()));
+        back.setOnMouseClicked(e -> viewService.getMainMenu());
+        beginner.setOnMouseClicked(e -> viewService.setMainScene(classNewCharacter(), viewService.isFullScreen()));
 
         back.getStyleClass().add("back-button");
         back.setPrefSize(225, 300);
@@ -127,9 +123,9 @@ public class NewFutureView {
         FutureClassDescription classDescription = new FutureClassDescription();
 
         //Button Actions
-        back.setOnMouseClicked(e -> view.setMainScene(getNewCharacter(), view.isFullScreen()));
+        back.setOnMouseClicked(e -> viewService.setMainScene(getNewCharacter(), viewService.isFullScreen()));
         //--Smart Hero
-        smartHero.setOnMouseClicked(e -> view.setMainScene(newFutureStatsView.getGuidedStats(), view.isFullScreen()));
+        smartHero.setOnMouseClicked(e -> viewService.setMainScene(newFutureStatsView.getGuidedStats(), viewService.isFullScreen()));
         smartHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getSmartHeroDesc());
@@ -184,7 +180,7 @@ public class NewFutureView {
         Button back = new Button("Back");
 
         //Button Actions
-        back.setOnMouseClicked(e -> view.setMainScene(classNewCharacter(), view.isFullScreen()));
+        back.setOnMouseClicked(e -> viewService.setMainScene(classNewCharacter(), viewService.isFullScreen()));
 
         back.getStyleClass().add("back-button");
         back.setPrefSize(225, 300);

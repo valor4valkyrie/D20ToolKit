@@ -26,6 +26,7 @@ public class ModelConfig {
     public StatsModel statsModel(){
         return new StatsModel();
     }
+
 /*
     @Bean
     public BasicDataSource getDataSource() {

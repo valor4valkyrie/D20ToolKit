@@ -1,6 +1,6 @@
 package com.d20.view.future;
 
-import com.d20.view.MainView;
+import com.d20.services.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,17 +8,17 @@ import org.springframework.stereotype.Component;
 public class FutureView {
 
     @Autowired
-    MainView view;
+    private ViewService viewService;
 
     @Autowired
-    NewFutureView newFutureView;
+    private NewFutureView newFutureView;
 
     public FutureView(){
 
     }
 
     public void newFutureView(){
-        view.setMainScene(newFutureView.getNewCharacter(), view.isFullScreen());
+        viewService.setMainScene(newFutureView.getNewCharacter(), viewService.isFullScreen());
     }
     
 }

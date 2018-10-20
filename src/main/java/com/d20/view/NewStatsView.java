@@ -1,14 +1,14 @@
 package com.d20.view;
 
 import com.d20.model.Stat;
-import com.d20.model.StatsModel;
-import com.d20.view.future.NewFutureView;
+import com.d20.model.Stats;
+import com.d20.services.StatsService;
+import com.d20.services.ViewService;
+import com.d20.view.future.FutureView;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,11 @@ import java.util.stream.Stream;
 public class NewStatsView {
 
     @Autowired
-    MainView view;
+    private ViewService viewService;
 
     @Autowired
-    NewFutureView newFutureView;
+    StatsService statsService;
 
-    @Autowired
-    StatsModel statsModel;
 
     private String style = null;
 
@@ -38,9 +36,45 @@ public class NewStatsView {
         this.style = style;
     }
 
+    public GridPane statsView(Stat aStat, boolean showTemp){
+
+        GridPane statsBox = new GridPane();
+
+        ColumnConstraints col = new ColumnConstraints();
+        col.setPrefWidth(225);
+        col.setHalignment(HPos.CENTER);
+
+        Text statDescription = new Text(aStat.getName());
+        Text statValue = new Text(String.valueOf(aStat.getStat()));
+        Text statMod = new Text(String.valueOf(aStat.getModifier()));
+        Text statTemp = new Text(String.valueOf(aStat.getTempStat()));
+        Text statTempMod = new Text(String.valueOf(aStat.getTempMod()));
+
+        TextArea statExplaination = new TextArea();
+
+        if (showTemp) {
+            statsBox.addColumn(0, statDescription);
+            statsBox.addColumn(1, statValue);
+            statsBox.addColumn(2, statMod);
+            statsBox.addColumn(3, statTemp);
+            statsBox.addColumn(4, statTempMod);
+            statsBox.getColumnConstraints().addAll(col, col, col, col, col);
+        } else {
+            statsBox.addColumn(0, statDescription);
+            statsBox.addColumn(1, statValue);
+            statsBox.addColumn(2, statMod);
+            statsBox.getColumnConstraints().addAll(col, col, col);
+        }
+
+        statsBox.getStyleClass().add("stats-box");
+
+        return statsBox;
+
+    }
+
     public FlowPane getNewStatsView(boolean showTemp) {
 
-        statsModel.rollAllStats();
+        statsService.rollAllStats();
 
         FlowPane flowPane = new FlowPane();
         VBox firstStat = new VBox();
@@ -65,50 +99,20 @@ public class NewStatsView {
 
         Button select = new Button("Select These Stats");
         select.setOnMouseClicked(e -> {
-            //statsService.saveStats(new Stats(statsModel.getStatsMap()));
+            statsService.rollAllStats();
+            viewService.setMainScene(getNewStatsView(false), viewService.isFullScreen());
         });
         statsDescBox.getStyleClass().add("stats-header");
 
-        Text statsTotalField = new Text("Ability Totals: " + String.valueOf(statsModel.getStatsTotal()));
+        Text statsTotalField = new Text("Ability Totals: " + String.valueOf(statsService.getStatsTotal()));
 
-        statsModel.getStatsMap().entrySet().forEach(oneStat -> {
-
-            Stat aStat = oneStat.getValue();
-
-            GridPane statsBox = new GridPane();
-
-            Alert statsInfo = new Alert(Alert.AlertType.INFORMATION);
-            statsInfo.setTitle("Strength");
-            statsInfo.setHeaderText("Strength");
-            statsInfo.setContentText("TEST");
-
-            Text statDescription = new Text(aStat.getName());
-            Text statValue = new Text(String.valueOf(aStat.getStat()));
-            Text statMod = new Text(String.valueOf(aStat.getModifier()));
-            Text statTemp = new Text(String.valueOf(aStat.getTempStat()));
-            Text statTempMod = new Text(String.valueOf(aStat.getTempMod()));
-
-            TextArea statExplaination = new TextArea();
-
-            if (showTemp) {
-                statsBox.addColumn(0, statDescription);
-                statsBox.addColumn(1, statValue);
-                statsBox.addColumn(2, statMod);
-                statsBox.addColumn(3, statTemp);
-                statsBox.addColumn(4, statTempMod);
-                statsBox.getColumnConstraints().addAll(col, col, col, col, col);
-            } else {
-                statsBox.addColumn(0, statDescription);
-                statsBox.addColumn(1, statValue);
-                statsBox.addColumn(2, statMod);
-                statsBox.getColumnConstraints().addAll(col, col, col);
-            }
-
-            statsBox.getStyleClass().add("stats-box");
-
-            firstStat.getChildren().add(statsBox);
-
-        });
+        Stats stats = statsService.getStats();
+        firstStat.getChildren().add(statsView(stats.getStrength(), showTemp));
+        firstStat.getChildren().add(statsView(stats.getDexterity(), showTemp));
+        firstStat.getChildren().add(statsView(stats.getConstitution(), showTemp));
+        firstStat.getChildren().add(statsView(stats.getIntelligence(), showTemp));
+        firstStat.getChildren().add(statsView(stats.getWisdom(), showTemp));
+        firstStat.getChildren().add(statsView(stats.getCharisma(), showTemp));
 
         HBox statBox = new HBox();
         statBox.getChildren().addAll(statsTotalField, select);
@@ -123,7 +127,7 @@ public class NewStatsView {
 
         flowPane.getChildren().add(firstStat);
 
-        statsModel.getStatsTotal();
+        statsService.getStatsTotal();
 
         return flowPane;
     }
@@ -134,8 +138,10 @@ public class NewStatsView {
 
         VBox vBox = new VBox(15);
 
+        FutureView f = viewService.getFutureView();
+
         Button backButton = new Button("Back");
-        backButton.setOnMouseClicked(e -> view.setMainScene(newFutureView.classNewCharacter(), view.isFullScreen()));
+        backButton.setOnMouseClicked(e -> viewService.getMainMenu());
         vBox.getChildren().addAll(getNewStatsView(false), backButton);
 
         pane.setLeft(vBox);
