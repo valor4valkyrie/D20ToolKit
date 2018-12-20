@@ -2,10 +2,12 @@ package com.d20.view;
 
 import com.d20.model.Stat;
 import com.d20.model.Stats;
+import com.d20.services.ImageService;
 import com.d20.services.StatsService;
 import com.d20.services.ViewService;
 import com.d20.view.future.FutureView;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -13,6 +15,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +27,10 @@ public class NewStatsView {
     private ViewService viewService;
 
     @Autowired
-    StatsService statsService;
+    private StatsService statsService;
+
+    @Autowired
+    private ImageService imageService;
 
 
     private String style = null;
@@ -66,7 +72,12 @@ public class NewStatsView {
             statsBox.getColumnConstraints().addAll(col, col, col);
         }
 
-        statsBox.getStyleClass().add("stats-box");
+        try {
+            Path smartPath = Paths.get(getClass().getClassLoader()
+                    .getResource("./guide/strengthStatGuide.txt").toURI());
+            statsBox.getStyleClass().add("stats-box");
+        } catch (URISyntaxException e){System.out.print(e);}
+
 
         return statsBox;
 
@@ -97,11 +108,6 @@ public class NewStatsView {
 
         firstStat.getChildren().add(statsDescBox);
 
-        Button select = new Button("Select These Stats");
-        select.setOnMouseClicked(e -> {
-            statsService.rollAllStats();
-            viewService.setMainScene(getNewStatsView(false), viewService.isFullScreen());
-        });
         statsDescBox.getStyleClass().add("stats-header");
 
         Text statsTotalField = new Text("Ability Totals: " + String.valueOf(statsService.getStatsTotal()));
@@ -115,13 +121,11 @@ public class NewStatsView {
         firstStat.getChildren().add(statsView(stats.getCharisma(), showTemp));
 
         HBox statBox = new HBox();
-        statBox.getChildren().addAll(statsTotalField, select);
         statBox.setSpacing(50);
         statBox.setAlignment(Pos.CENTER);
         firstStat.getChildren().add(statBox);
 
         statBox.getStyleClass().add("stats-box");
-        select.getStyleClass().add("button");
         statsDescBox.getStyleClass().add("stats-box");
         firstStat.getStyleClass().add("statspane");
 
@@ -207,9 +211,11 @@ public class NewStatsView {
         }
 
         TextArea textArea = new TextArea(statsDesc.toString());
-        textArea.setPrefSize(800, 800);
+        textArea.setPrefWidth(viewService.getScreenWidth() - 100);
         textArea.getStyleClass().add("text-area");
         textArea.setWrapText(true);
+        textArea.setMinHeight(viewService.getScreenHeight() / 4);
+        textArea.setEditable(false);
 
         pane.getChildren().add(textArea);
 
@@ -223,7 +229,7 @@ public class NewStatsView {
 
         try {
             Path smartPath = Paths.get(getClass().getClassLoader()
-                    .getResource("./guide/"+ stat + ".txt").toURI());
+                    .getResource("./guide/" + stat + "StatGuide.txt").toURI());
             Stream<String> lines = Files.lines(smartPath);
             lines.forEach(line -> statsDesc.append(line).append("\n"));
             lines.close();
@@ -232,9 +238,9 @@ public class NewStatsView {
         }
 
         TextArea textArea = new TextArea(statsDesc.toString());
-        textArea.setPrefSize(800, 800);
         textArea.getStyleClass().add("text-area");
         textArea.setWrapText(true);
+        textArea.setMinWidth(viewService.getScreenWidth() - 200);
 
         pane.getChildren().add(textArea);
 
@@ -244,9 +250,30 @@ public class NewStatsView {
     public Pane getGuidedStats(){
 
         BorderPane pane = new BorderPane();
+        HBox topBox = new HBox(getGuidedStatsText());
+        HBox centerBox = new HBox(getSingleRolledStats());
+        HBox bottomBox = new HBox(getStatsGuideText("strength"));
+        HBox leftBox = new HBox();
+        HBox rightBox = new HBox();
 
-        pane.setLeft(getSingleRolledStats());
-        pane.setRight(getGuidedStatsText());
+        pane.setBackground(imageService.createBackgroundImage(imageService.getHelixWarrior(), BackgroundPosition.CENTER));
+
+        topBox.setAlignment(Pos.CENTER);
+        centerBox.setAlignment(Pos.CENTER);
+        bottomBox.setAlignment(Pos.CENTER);
+        leftBox.setAlignment(Pos.CENTER);
+        rightBox.setAlignment(Pos.CENTER);
+
+        pane.setPadding(new Insets(10,10,10,10));
+        topBox.setPadding(new Insets(10,10,10,10));
+        centerBox.setPadding(new Insets(10,10,10,10));
+        bottomBox.setPadding(new Insets(10,10,10,10));
+
+        pane.setTop(topBox);
+        pane.setCenter(centerBox);
+        pane.setBottom(bottomBox);
+        pane.setLeft(leftBox);
+        pane.setRight(rightBox);
 
         switch (style) {
             case "future":

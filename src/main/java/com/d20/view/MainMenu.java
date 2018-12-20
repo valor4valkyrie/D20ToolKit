@@ -1,14 +1,13 @@
 package com.d20.view;
 
+import com.d20.services.ImageService;
 import com.d20.services.ViewService;
-import com.d20.view.future.FutureView;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +17,16 @@ public class MainMenu implements MainMenuInt {
     @Autowired
     private ViewService viewService;
 
+    @Autowired
+    private ImageService imageService;
+
     public void MainMenu() {}
 
-    public FlowPane getMainMenu(){
+    public BorderPane getMainMenu(){
 
         HBox hBox = new HBox();
         hBox.setSpacing(50);
+        hBox.getStyleClass().add("HBox");
 
         //Button Images
         ImageView mutantsImage = new ImageView(new Image("./images/MutantsMasterminds.jpg"));
@@ -62,15 +65,18 @@ public class MainMenu implements MainMenuInt {
         });
         **/
 
-        //FlowPane for the game buttons
-        FlowPane flowPane = new FlowPane();
+        BorderPane borderPane = new BorderPane();
         hBox.getChildren().addAll(pathfinderButton, futureButton, mutantsButton, modernButton, spycraftButton, ddButton);
-        flowPane.getChildren().add(hBox);
+        hBox.setAlignment(Pos.CENTER);
+        borderPane.setCenter(hBox);
+        borderPane.setBackground(imageService.createBackgroundImage(imageService.getGeneticCatImage(), BackgroundPosition.CENTER));
+        borderPane.getStylesheets().add("../resources/css/general.css");
+        borderPane.getStyleClass().add("pane");
         /*TabPane tabPane = new TabPane();
         Tab statsPane = new Tab();
         statsPane.setText("Stats");
         tabPane.getTabs().add(statsPane);*/
 
-        return flowPane;
+        return borderPane;
     }
 }

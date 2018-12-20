@@ -4,12 +4,10 @@ import com.d20.view.MainMenu;
 import com.d20.view.future.FutureView;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,11 +44,13 @@ public class ViewService {
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(borderPane);
+
 /*        Background background = new Background(backgroundImage);;
         borderPane.setBackground(background);
         pane.setBackground(background);*/
 
         Scene scene = new Scene(stackPane,  stage.getWidth(), stage.getHeight());
+        scene.getStylesheets().add("../resources/css/general.css");
         stage.setScene(scene);
         stage.setFullScreen(fullscreen);
         stage.setTitle("D20 Toolkit");
@@ -96,8 +96,18 @@ public class ViewService {
         return menubar;
     }
 
+    public Scene getCurrentScene(){return stage.getScene();}
+
     public Stage getStage() {
         return stage;
+    }
+
+    public double getScreenWidth(){
+        return this.stage.getWidth();
+    }
+
+    public double getScreenHeight(){
+        return this.stage.getHeight();
     }
 
     public FutureView getFutureView() {

@@ -11,7 +11,10 @@ import java.util.*;
 public class StatsService {
 
     @Autowired
-    Stats stats;
+    private Stats stats;
+
+    @Autowired
+    private DiceService diceService;
 
     public StatsService(){}
 
@@ -23,17 +26,16 @@ public class StatsService {
     private int statsTotal;
 
     private int rollStat(){
-        Random random = new Random();
 
         int statsTotal = 0;
 
-        int diceRoll = random.nextInt(6) + 1;
+        int diceRoll = diceService.rollD6();
 
         List<Integer> stats = new ArrayList<>();
 
         while(stats.size() < 4) {
             while (diceRoll < 2) {
-                diceRoll = random.nextInt(6) + 1;
+                diceRoll = diceService.rollD6();
             }
             stats.add(diceRoll);
         }

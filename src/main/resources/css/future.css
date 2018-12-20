@@ -59,9 +59,13 @@
 .text-area {
     -fx-border-color: black;
     -fx-border-width: 5;
-    -fx-border-radius: 15;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
     -fx-padding: 25;
     -fx-font-size: 12pt;
+    -fx-opacity: 0.8;
+    -fx-background-color: gray;
+    -fx-font-family: "SF Outer Limits";
 }
 
 .button {
@@ -84,4 +88,16 @@
     -fx-border-width: 3;
     -fx-border-radius: 15;
     -fx-background-radius: 15;
+}
+
+.pane {
+    -fx-border-radius: 30;
+}
+
+.hbox {
+    -fx-border-radius: 30;
+}
+
+.vbox {
+    -fx-border-radius: 30;
 }
