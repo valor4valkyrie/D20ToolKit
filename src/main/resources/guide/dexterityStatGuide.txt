@@ -1,0 +1,9 @@
+Dexterity (Dex)
+Measures hand-eye coordination, agility, reflexes, and balance. This ability is important for characters who want to be good shots with ranged weapons or who want to sneak fairly well.
+
+You apply your character's Dexterity modifier to:
+* Ranged attack rolls
+* Defense, provided the character can react to the attack.
+* Reflex saving throws, for avoiding grenades and similar attacks.
+* Move Silently, Hide, and Drive checks, and other skill checks for which Dexterity is the key ability.
+

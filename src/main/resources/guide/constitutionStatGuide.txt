@@ -1,0 +1,7 @@
+Constitution (Con)
+Constitution represents your character's health and stamina. Constitution is the ability associated with Tough heroes. It also factors into the massive damage rules (see Chapter Five: Combat).
+
+You apply your Constitution modifier to:
+* Each die roll for gaining additional hit points (though a Constitution penalty can never reduce a 'hit point roll below 1; that is, a character always gains at least 1 hit point each time he or she gains a level).
+* Fortitude saving throws, for resisting poison and similar threats.
+* Concentration checks.

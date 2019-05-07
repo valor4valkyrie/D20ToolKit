@@ -1,0 +1,6 @@
+Intelligence (Int)
+Intelligence determines how well your character learns and reasons. Intelligence is important for any character who skills, and it is the ability
+
+You apply your Intelligence modifier to:
+* The number of skill points gained at each new level (though an Intelligence penalty can never reduce this below 1; your character always gets at least 1 skill point per level).
+* Search and Knowledge checks, and other skill checks for which Intelligence is the key ability.

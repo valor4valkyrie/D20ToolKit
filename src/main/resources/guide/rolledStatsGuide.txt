@@ -1,0 +1,3 @@
+These are your possible stats! Consider your class you picked earlier and what that attribute will be. Hence, a Smart Hero
+should have a high Intelligence score, a Strong Hero should have a high Strength. Choose one set of stats out of the three.
+If the scores are similar and you are having trouble deciding, we have added a total for each.

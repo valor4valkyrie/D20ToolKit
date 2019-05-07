@@ -1,0 +1,6 @@
+Charisma (Cha)
+Charisma measures a character‘s force of personality, persuasiveness, magnetism, ability t o lead, and physical attractiveness. It represents strength of personality, not merely how others perceive you in a social setting. This is the ability associated with Charismatic heroes.
+
+You apply your Charisma modifier to:
+* Bluff, Diplomacy, and Disguise checks, as well as other skill checks for which Charisma is the key ability.
+* Checks representing attempts t o influence others.
