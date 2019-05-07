@@ -1,0 +1,6 @@
+Wisdom (Wis)
+Wisdom describes a character‘s willpower, common sense, perception, and intuition. Compared to Intelligence, Wisdom relates to being in tune with and aware of one’s surroundings, while Intelligence represents one’s ability to analyze information. An “absent-minded professor” has a low Wisdom score and a high Intelligence score. A simpleton with low Intelligence might nevertheless have great insight (high Wisdom). If you want your character to have teen senses, put a high score in Wisdom. This is the ability associated with Dedicated heroes.
+
+You apply your character‘s Wisdom modifier to:
+* Will saving throws, for using certain class talents or resisting other class talents.
+* Listen, Spot, and Treat Injury checks, and other skill checks for which Wisdom is the key ability.
