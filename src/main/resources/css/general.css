@@ -1,9 +1,32 @@
 .pane {
+    -fx-font-size: 12pt;
 }
 
-.HBox {
-    -fx-border-color: gray;
+.button {
+    -fx-border-color: black;
+    -fx-border-width: 5;
+}
+
+.vBox {
+    -fx-border-color: black;
+    -fx-border-width: 5;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-padding: 25;
     -fx-border-width: 3;
     -fx-border-radius: 15;
     -fx-background-radius: 15;
+    -fx-background-color: gray;
+}
+
+.hbox {
+    -fx-border-color: black;
+    -fx-border-width: 5;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-padding: 25;
+    -fx-border-width: 3;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: gray;
 }

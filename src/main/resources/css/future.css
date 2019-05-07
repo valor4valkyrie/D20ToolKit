@@ -71,6 +71,7 @@
 .button {
     -fx-border-radius: 30;
     -fx-background-radius: 30;
+    -fx-padding: 15px;
 }
 
 .back-button {
@@ -96,8 +97,18 @@
 
 .hbox {
     -fx-border-radius: 30;
+    -fx-padding: 15px;
 }
 
 .vbox {
     -fx-border-radius: 30;
+    -fx-padding: 15px;
+}
+
+.hbox > .button{
+    -fx-font-family: "yukarimobile";
+    -fx-border-color: black;
+    -fx-border-width: 3;
+    -fx-padding: 5px;
+    -fx-font-size: 18pt;
 }
