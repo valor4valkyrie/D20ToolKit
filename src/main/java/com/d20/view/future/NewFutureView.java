@@ -2,17 +2,17 @@ package com.d20.view.future;
 
 import com.d20.main.Utilities;
 import com.d20.model.future.FutureClassDescription;
+import com.d20.services.ImageService;
 import com.d20.services.ViewService;
 import com.d20.view.MainMenu;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +29,9 @@ public class NewFutureView {
     private ViewService viewService;
 
     @Autowired
+    private ImageService imageService;
+
+    @Autowired
     private Utilities utilities;
 
     @Autowired
@@ -40,7 +43,11 @@ public class NewFutureView {
     public BorderPane getNewCharacter(){
 
         BorderPane borderPane = new BorderPane();
-        FlowPane flowPane = new FlowPane();
+        VBox vBox = new VBox();
+        vBox.setSpacing(50);
+        vBox.setPadding(new Insets(100, 100, 100, 100));
+        vBox.setMaxSize(800, 550);
+        vBox.getStyleClass().add("vBox");
 
         Image futureImage = new Image("./images/D20_Future_Book_Cover.jpg");
 
@@ -48,14 +55,19 @@ public class NewFutureView {
         Button advanced = new Button("Advanced: Let Me Pick Where to Go.", new ImageView(futureImage));
         Button back = new Button("Back");
 
+        beginner.setPrefSize(750, 500);
+        advanced.setPrefSize(750, 500);
+
         back.setOnMouseClicked(e -> viewService.getMainMenu());
         beginner.setOnMouseClicked(e -> viewService.setMainScene(classNewCharacter(), viewService.isFullScreen()));
 
-        back.getStyleClass().add("back-button");
+        back.getStyleClass().add("navigation-button");
         back.setPrefSize(225, 300);
 
-        flowPane.getChildren().addAll(back, beginner, advanced);
-        borderPane.setCenter(flowPane);
+        vBox.getChildren().addAll(beginner, advanced, back);
+        borderPane.setCenter(vBox);
+        vBox.setAlignment(Pos.CENTER);
+        borderPane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("GeneticCatCharacter"), BackgroundPosition.CENTER));
         borderPane.getStylesheets().add("../resources/css/stats.css");
 
         return  borderPane;
@@ -65,6 +77,8 @@ public class NewFutureView {
         BorderPane borderPane = new BorderPane();
 
         FlowPane flowPane = new FlowPane();
+        flowPane.setHgap(25);
+        flowPane.setAlignment(Pos.CENTER);
 
         VBox descriptionBox = new VBox();
 
@@ -125,7 +139,7 @@ public class NewFutureView {
         //Button Actions
         back.setOnMouseClicked(e -> viewService.setMainScene(getNewCharacter(), viewService.isFullScreen()));
         //--Smart Hero
-        smartHero.setOnMouseClicked(e -> viewService.setMainScene(newFutureStatsView.getGuidedStats(), viewService.isFullScreen()));
+        smartHero.setOnMouseClicked(e -> viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen()));
         smartHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getSmartHeroDesc());
@@ -157,8 +171,6 @@ public class NewFutureView {
         });
         descriptionBox.getChildren().addAll(classDescriptionLabel, textArea);
         flowPane.getChildren().addAll(fastHero, smartHero, strongHero, toughHero, charismaticHero, dedicatedHero, back);
-        flowPane.setHgap(20);
-        flowPane.setAlignment(Pos.CENTER);
 
         borderPane.setTop(descTextArea);
         borderPane.setCenter(flowPane);

@@ -15,12 +15,12 @@ public class ImageService{
         return new ImageView(new Image("./images/D20_Future_Book_Cover.jpg"));
     }
 
-    public ImageView getHelixWarrior(){
-        return new ImageView(new Image("./images/HelixWarrior.jpg"));
+    public ImageView getImage(String image){
+        return new ImageView(new Image("./images/" + image + ".jpg"));
     }
 
-    public ImageView getGeneticCatImage(){
-        return new ImageView(new Image("./images/GeneticCatCharacter.jpg"));
+    public ImageView getFutureImage(String image){
+        return new ImageView(new Image("./images/Future/" + image + ".jpg"));
     }
 
     public Background createBackgroundImage(ImageView backgroundImage, BackgroundPosition pos){
