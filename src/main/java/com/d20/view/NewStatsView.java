@@ -32,15 +32,10 @@ public class NewStatsView {
     @Autowired
     private ImageService imageService;
 
-
-    private String style = null;
-
     public NewStatsView() {
     }
 
-    public NewStatsView(String style) {
-        this.style = style;
-    }
+    public NewStatsView(String style) {}
 
     public GridPane statsView(Stat aStat, boolean showTemp){
 
@@ -78,12 +73,15 @@ public class NewStatsView {
             statsBox.getStyleClass().add("stats-box");
         } catch (URISyntaxException e){System.out.print(e);}
 
-
         return statsBox;
 
     }
 
-    public FlowPane getNewStatsView(boolean showTemp) {
+    public FlowPane getNewStatsView(boolean showTemp){
+        return getNewStatsView(showTemp, false);
+    }
+
+    public FlowPane getNewStatsView(boolean showTemp, boolean showTotal) {
 
         statsService.rollAllStats();
 
@@ -110,8 +108,6 @@ public class NewStatsView {
 
         statsDescBox.getStyleClass().add("stats-header");
 
-        Text statsTotalField = new Text("Ability Totals: " + String.valueOf(statsService.getStatsTotal()));
-
         Stats stats = statsService.getStats();
         firstStat.getChildren().add(statsView(stats.getStrength(), showTemp));
         firstStat.getChildren().add(statsView(stats.getDexterity(), showTemp));
@@ -124,6 +120,20 @@ public class NewStatsView {
         statBox.setSpacing(50);
         statBox.setAlignment(Pos.CENTER);
         firstStat.getChildren().add(statBox);
+
+        if(showTotal){
+            HBox statsTotal = new HBox(15);
+            statsTotal.setAlignment(Pos.CENTER);
+            Text statsTotalText = new Text("Ability Totals: ");
+            Text statsTotalValue = new Text(String.valueOf(statsService.getStatsTotal()));
+
+            Button selectStats = new Button("Select These Stats");
+            selectStats.setAlignment(Pos.BASELINE_RIGHT);
+
+            statsTotal.getChildren().addAll(statsTotalText, statsTotalValue, selectStats);
+
+            firstStat.getChildren().addAll(statsTotal);
+        }
 
         statBox.getStyleClass().add("stats-box");
         statsDescBox.getStyleClass().add("stats-box");
@@ -152,16 +162,6 @@ public class NewStatsView {
 
         backButton.getStyleClass().add("back-button");
 
-
-        switch (style) {
-            case "future":
-                pane.getStylesheets().add("../resources/css/future.css");
-                break;
-            default:
-                pane.getStylesheets().add("../resources/css/stats.css");
-                break;
-        }
-
         return pane;
 
     }
@@ -169,28 +169,40 @@ public class NewStatsView {
     public Pane getAllRolledStats() {
         BorderPane pane = new BorderPane();
 
-        VBox vBox = new VBox(15);
+        HBox hBox = new HBox(15);
+        HBox hBox2 = new HBox(15);
+        hBox.setAlignment(Pos.CENTER);
+        hBox2.setAlignment(Pos.CENTER);
+        hBox.setPadding(new Insets(15,15,15,15));
+        hBox2.setPadding(new Insets(15,15,15,15));
 
-        vBox.getChildren().addAll(getNewStatsView(false), getNewStatsView(false),
-                getNewStatsView(false));
+        hBox.getChildren().addAll(getNewStatsView(false, true), getNewStatsView(false, true));
+        hBox2.getChildren().add(getNewStatsView(false, true));
 
         StringBuilder statsDesc = new StringBuilder();
 
-        pane.setLeft(vBox);
+        try {
+            Path smartPath = Paths.get(getClass().getClassLoader()
+                    .getResource("./guide/rolledStatsGuide.txt").toURI());
+            Stream<String> lines = Files.lines(smartPath);
+            lines.forEach(line -> statsDesc.append(line));
+            lines.close();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        pane.setTop(hBox);
+        pane.setCenter(hBox2);
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Explorer"), BackgroundPosition.CENTER));
+
 
         TextArea textArea = new TextArea(statsDesc.toString());
         textArea.getStyleClass().add("text-area");
         textArea.setWrapText(true);
 
-        switch (style) {
-            case "future":
-                pane.getStylesheets().add("../resources/css/future.css");
-                break;
-            default:
-                pane.getStylesheets().add("../resources/css/stats.css");
-                break;
-        }
-        pane.setCenter(textArea);
+        pane.setBottom(textArea);
+
+        statsService.sendStats(statsService.getStats());
 
         return pane;
     }
@@ -238,25 +250,31 @@ public class NewStatsView {
         }
 
         TextArea textArea = new TextArea(statsDesc.toString());
+        textArea.setEditable(false );
         textArea.getStyleClass().add("text-area");
         textArea.setWrapText(true);
+        textArea.setMinHeight(viewService.getScreenHeight() / 4);
         textArea.setMinWidth(viewService.getScreenWidth() - 200);
 
         pane.getChildren().add(textArea);
+        pane.getStyleClass().add("pane");
 
         return pane;
     }
 
-    public Pane getGuidedStats(){
+    public Pane getGuidedStatsPane(){
 
         BorderPane pane = new BorderPane();
+        Button statsStartButton = new Button("Start Stats");
+        statsStartButton.getStyleClass().add("");
+        statsStartButton.setOnMouseClicked(e -> {getGuidedStrength();});
         HBox topBox = new HBox(getGuidedStatsText());
         HBox centerBox = new HBox(getSingleRolledStats());
-        HBox bottomBox = new HBox(getStatsGuideText("strength"));
+        HBox bottomBox = new HBox(statsStartButton);
         HBox leftBox = new HBox();
         HBox rightBox = new HBox();
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getHelixWarrior(), BackgroundPosition.CENTER));
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("HelixWarrior"), BackgroundPosition.CENTER));
 
         topBox.setAlignment(Pos.CENTER);
         centerBox.setAlignment(Pos.CENTER);
@@ -275,17 +293,159 @@ public class NewStatsView {
         pane.setLeft(leftBox);
         pane.setRight(rightBox);
 
-        switch (style) {
-            case "future":
-                pane.getStylesheets().add("../resources/css/future.css");
-                break;
-            default:
-                pane.getStylesheets().add("../resources/css/stats.css");
-                break;
-        }
-
         return pane;
 
+    }
+
+    public void getGuidedStrength(){
+        BorderPane pane = new BorderPane();
+        HBox hBox = new HBox();
+        HBox bottomBox = new HBox();
+
+        hBox.setSpacing(25);
+        hBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(25);
+        bottomBox.setAlignment(Pos.CENTER);
+
+        Button nextStat = new Button("Next to Dexterity");
+        Button backStat = new Button("Back to Stats Overview");
+        nextStat.getStyleClass().add("navigation-button");
+        backStat.getStyleClass().add("navigation-button");
+        nextStat.setOnMouseClicked(e -> getGuidedDexterity());
+        backStat.setOnMouseClicked(e -> viewService.setMainScene(getGuidedStatsPane(), true));
+
+        bottomBox.getChildren().addAll(backStat, nextStat);
+        hBox.getChildren().add(getStatsGuideText("strength"));
+        pane.setCenter(hBox);
+        pane.setBottom(bottomBox);
+
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("HelixWarrior"), BackgroundPosition.CENTER));
+
+        viewService.setMainScene(pane, true);
+    }
+
+    public void getGuidedDexterity(){
+        BorderPane pane = new BorderPane();
+        HBox hBox = new HBox();
+        HBox bottomBox = new HBox();
+
+        hBox.setSpacing(25);
+        hBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(25);
+        bottomBox.setAlignment(Pos.CENTER);
+
+        Button nextStat = new Button("Next to Constitution");
+        Button backStat = new Button("Back to Strength");
+        nextStat.setOnMouseClicked(e -> getGuidedConstitution());
+        backStat.setOnMouseClicked(e -> getGuidedStrength());
+
+        bottomBox.getChildren().addAll(backStat, nextStat);
+        hBox.getChildren().add(getStatsGuideText("dexterity"));
+        pane.setCenter(hBox);
+        pane.setBottom(bottomBox);
+
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Dogfighter"), BackgroundPosition.CENTER));
+
+        viewService.setMainScene(pane, true);
+    }
+
+    public void getGuidedConstitution(){
+        BorderPane pane = new BorderPane();
+        HBox hBox = new HBox();
+        HBox bottomBox = new HBox();
+
+        hBox.setSpacing(25);
+        hBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(25);
+        bottomBox.setAlignment(Pos.CENTER);
+
+        Button nextStat = new Button("Next to Intelligence");
+        Button backStat = new Button("Back to Dexterity");
+        nextStat.setOnMouseClicked(e -> getGuidedIntelligence());
+        backStat.setOnMouseClicked(e -> getGuidedDexterity());
+
+        bottomBox.getChildren().addAll(backStat, nextStat);
+        hBox.getChildren().add(getStatsGuideText("constitution"));
+        pane.setCenter(hBox);
+        pane.setBottom(bottomBox);
+
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Dreadnought"), BackgroundPosition.CENTER));
+
+        viewService.setMainScene(pane, true);
+    }
+
+    public void getGuidedIntelligence(){
+        BorderPane pane = new BorderPane();
+        HBox hBox = new HBox();
+        HBox bottomBox = new HBox();
+
+        hBox.setSpacing(25);
+        hBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(25);
+        bottomBox.setAlignment(Pos.CENTER);
+
+        Button nextStat = new Button("Next to Wisdom");
+        Button backStat = new Button("Back to Constitution");
+        nextStat.setOnMouseClicked(e -> getGuidedWisdom());
+        backStat.setOnMouseClicked(e -> getGuidedConstitution());
+
+        bottomBox.getChildren().addAll(backStat, nextStat);
+        hBox.getChildren().add(getStatsGuideText("intelligence"));
+        pane.setCenter(hBox);
+        pane.setBottom(bottomBox);
+
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Engineer"), BackgroundPosition.CENTER));
+
+        viewService.setMainScene(pane, true);
+    }
+
+    public void getGuidedWisdom(){
+        BorderPane pane = new BorderPane();
+        HBox hBox = new HBox();
+        HBox bottomBox = new HBox();
+
+        hBox.setSpacing(25);
+        hBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(25);
+        bottomBox.setAlignment(Pos.CENTER);
+
+        Button nextStat = new Button("Next to Charisma");
+        Button backStat = new Button("Back to Intelligence");
+        nextStat.setOnMouseClicked(e -> getGuidedCharisma());
+        backStat.setOnMouseClicked(e -> getGuidedIntelligence());
+
+        bottomBox.getChildren().addAll(backStat, nextStat);
+        hBox.getChildren().add(getStatsGuideText("wisdom"));
+        pane.setCenter(hBox);
+        pane.setBottom(bottomBox);
+
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Explorer"), BackgroundPosition.CENTER));
+
+        viewService.setMainScene(pane, true);
+    }
+
+    public void getGuidedCharisma(){
+        BorderPane pane = new BorderPane();
+        HBox hBox = new HBox();
+        HBox bottomBox = new HBox();
+
+        hBox.setSpacing(25);
+        hBox.setAlignment(Pos.CENTER);
+        bottomBox.setAlignment(Pos.CENTER);
+
+        Button nextStat = new Button("Roll My Stats!");
+        Button backStat = new Button("Back to Wisdom");
+        nextStat.setOnMouseClicked(e -> viewService.setMainScene(getAllRolledStats(), true));
+        backStat.setOnMouseClicked(e -> getGuidedWisdom());
+
+        bottomBox.getChildren().addAll(backStat, nextStat);
+        hBox.getChildren().add(getStatsGuideText("charisma"));
+        pane.setCenter(hBox);
+        pane.setBottom(bottomBox);
+
+        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Ambassador"), BackgroundPosition.CENTER));
+
+        viewService.setMainScene(pane, true);
     }
 
 }

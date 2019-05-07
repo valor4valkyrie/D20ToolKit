@@ -3,11 +3,11 @@ package com.d20.services;
 import com.d20.view.MainMenu;
 import com.d20.view.future.FutureView;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,8 @@ public class ViewService {
     @Autowired
     private MainMenu mainMenu;
 
+    private String style = "default";
+
     private Image ddBackgroundImage = new Image("./images/DDBackground.jpg");
     private BackgroundImage backgroundImage = new BackgroundImage(ddBackgroundImage, BackgroundRepeat.REPEAT,
             BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
@@ -31,8 +33,9 @@ public class ViewService {
     public ViewService(){}
 
     public void setMainScene(Pane pane, boolean fullscreen){
+        pane.setPadding(new Insets(15, 15, 25, 15));
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
@@ -45,11 +48,20 @@ public class ViewService {
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(borderPane);
 
+        switch (style) {
+            case "future":
+                pane.getStylesheets().add("../resources/css/future.css");
+                break;
+            default:
+                pane.getStylesheets().add("../resources/css/stats.css");
+                break;
+        }
+
 /*        Background background = new Background(backgroundImage);;
         borderPane.setBackground(background);
         pane.setBackground(background);*/
 
-        Scene scene = new Scene(stackPane,  stage.getWidth(), stage.getHeight());
+        Scene scene = new Scene(stackPane,  stage.getWidth() - 100, stage.getHeight());
         scene.getStylesheets().add("../resources/css/general.css");
         stage.setScene(scene);
         stage.setFullScreen(fullscreen);
@@ -103,7 +115,7 @@ public class ViewService {
     }
 
     public double getScreenWidth(){
-        return this.stage.getWidth();
+        return this.stage.getWidth() - 100;
     }
 
     public double getScreenHeight(){
@@ -114,4 +126,7 @@ public class ViewService {
         return futureView;
     }
 
+    public String getStyle() { return style; }
+
+    public void setStyle(String style) { this.style = style; }
 }

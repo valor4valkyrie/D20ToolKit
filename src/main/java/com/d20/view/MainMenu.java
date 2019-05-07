@@ -2,6 +2,7 @@ package com.d20.view;
 
 import com.d20.services.ImageService;
 import com.d20.services.ViewService;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -25,8 +26,10 @@ public class MainMenu implements MainMenuInt {
     public BorderPane getMainMenu(){
 
         HBox hBox = new HBox();
-        hBox.setSpacing(50);
-        hBox.getStyleClass().add("HBox");
+        hBox.setSpacing(25);
+        hBox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        hBox.getStyleClass().add("hbox");
+        hBox.setMaxSize(viewService.getScreenWidth() - 100, viewService.getScreenHeight() / 2);
 
         //Button Images
         ImageView mutantsImage = new ImageView(new Image("./images/MutantsMasterminds.jpg"));
@@ -44,11 +47,23 @@ public class MainMenu implements MainMenuInt {
         Button ddButton = new Button("", ddImage);
         Button pathfinderButton = new Button("", pathfinderImage);
 
+        futureButton.getStyleClass().add("button");
+        mutantsButton.getStyleClass().add("button");
+        modernButton.getStyleClass().add("button");
+        spycraftButton.getStyleClass().add("button");
+        ddButton.getStyleClass().add("button");
+        pathfinderButton.getStyleClass().add("button");
+
         //Actions for the buttons
-        futureButton.setOnMouseClicked(e -> viewService.getFutureView().newFutureView());
+        futureButton.setOnMouseClicked(e -> {
+            viewService.getFutureView().newFutureView();
+            viewService.setStyle("future");
+
+        });
         futureButton.setOnKeyPressed(e -> {
             if(e.getCode().toString() == "ENTER"){
                 viewService.getFutureView().newFutureView();
+                viewService.setStyle("future");
             }
         });
 
@@ -68,8 +83,9 @@ public class MainMenu implements MainMenuInt {
         BorderPane borderPane = new BorderPane();
         hBox.getChildren().addAll(pathfinderButton, futureButton, mutantsButton, modernButton, spycraftButton, ddButton);
         hBox.setAlignment(Pos.CENTER);
+        hBox.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         borderPane.setCenter(hBox);
-        borderPane.setBackground(imageService.createBackgroundImage(imageService.getGeneticCatImage(), BackgroundPosition.CENTER));
+        borderPane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("GeneticCatCharacter"), BackgroundPosition.CENTER));
         borderPane.getStylesheets().add("../resources/css/general.css");
         borderPane.getStyleClass().add("pane");
         /*TabPane tabPane = new TabPane();
