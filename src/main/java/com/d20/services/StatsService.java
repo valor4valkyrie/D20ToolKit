@@ -1,20 +1,43 @@
 package com.d20.services;
 
+import com.d20.main.Utilities;
 import com.d20.model.Stat;
 import com.d20.model.Stats;
+import org.jasypt.util.text.BasicTextEncryptor;
+import org.jasypt.util.text.TextEncryptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class StatsService {
+
+    private static Logger log = LoggerFactory.getLogger(StatsService.class);
+
+    @Autowired
+    private Environment env;
 
     @Autowired
     private Stats stats;
 
     @Autowired
     private DiceService diceService;
+
+    @Autowired
+    private Utilities utils;
 
     public StatsService(){}
 
@@ -71,5 +94,34 @@ public class StatsService {
     public int getStatsTotal() {
         return statsTotal;
     }
+
+    @Async
+    public void sendStats(Stats stats){
+
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+
+        textEncryptor.setPassword(env.getProperty("security.jwt.password"));
+
+        String token = textEncryptor.encrypt(env.getProperty("security.jwt.password") + "-" + LocalDateTime.now().toString());
+
+        Client client = ClientBuilder.newClient();
+
+        try {
+
+            Response response = client.target(env.getProperty("d20.services.stats.endpoint"))
+                    .request(MediaType.APPLICATION_JSON)
+                    .header("JWT", token)
+                    .put(Entity.json(stats));
+
+            if(response.getStatus() != 200) throw new Exception();
+
+        } catch (Exception e) {
+            log.error("Failed to sync new character stats: {}", e);
+        } finally {
+            client.close();
+        }
+
+    }
+
 
 }

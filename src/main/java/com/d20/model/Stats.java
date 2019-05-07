@@ -2,10 +2,13 @@ package com.d20.model;
 
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Component
-public class Stats {
+public class Stats implements Serializable {
+
+    private final static long serialVersionUID = 1L;
 
     private Stat strength;
     private Stat dexterity;
