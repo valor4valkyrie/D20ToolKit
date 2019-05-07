@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@ComponentScan(basePackages = "com.d20.services")
+@ComponentScan(basePackages = {"com.d20.services"})
 @PropertySource(value = "../resources/application.properties")
 public class BeanConfig {
 

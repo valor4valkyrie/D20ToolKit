@@ -21,12 +21,6 @@ public class ModelConfig {
 
     @Bean
     public FutureModel futureModel(){ return new FutureModel(); }
-
-    @Bean
-    public StatsModel statsModel(){
-        return new StatsModel();
-    }
-
 /*
     @Bean
     public BasicDataSource getDataSource() {

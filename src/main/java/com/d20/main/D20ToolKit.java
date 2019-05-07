@@ -5,12 +5,10 @@ import com.d20.services.ViewService;
 import com.d20.view.ViewConfig;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan
-@Configurable
+
 public class D20ToolKit extends Application{
 
     @Override
