@@ -11,14 +11,22 @@
 }
 
 @font-face {
+    font-family: "Outer Limits";
     src: url("../fonts/sf-outer-limits.regular.ttf");
 }
 .statspane {
-    -fx-font-family: "yukarimobile";
+    -fx-font-family: "SF Outer Limits";
     -fx-border-color: black;
     -fx-border-width: 5;
     -fx-font-size: 20pt;
     -fx-background-color: rgba(158, 158, 158, 0.73);
+}
+
+.statspane .button {
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-padding: 15px;
+    -fx-text-alignment: center;
 }
 
 .stats-header {
@@ -36,7 +44,7 @@
 }
 
 .stat-name {
-    -fx-font-family: "yukarimobile";
+    -fx-font-family: "SF Outer Limits";
     -fx-font-size: 12pt;
     -fx-border-width: 5;
 }
@@ -106,7 +114,7 @@
 }
 
 .hbox > .button{
-    -fx-font-family: "yukarimobile";
+    -fx-font-family: "SF Outer Limits";
     -fx-border-color: black;
     -fx-border-width: 3;
     -fx-padding: 5px;

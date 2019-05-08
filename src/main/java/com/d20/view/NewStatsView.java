@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
@@ -128,7 +129,11 @@ public class NewStatsView {
             Text statsTotalValue = new Text(String.valueOf(statsService.getStatsTotal()));
 
             Button selectStats = new Button("Select These Stats");
-            selectStats.setAlignment(Pos.BASELINE_RIGHT);
+            selectStats.setTextAlignment(TextAlignment.CENTER);
+            selectStats.setOnMouseClicked(event -> {
+                selectStats.setDisable(true);
+                statsService.sendStats(stats);
+            });
 
             statsTotal.getChildren().addAll(statsTotalText, statsTotalValue, selectStats);
 
@@ -201,8 +206,6 @@ public class NewStatsView {
         textArea.setWrapText(true);
 
         pane.setBottom(textArea);
-
-        statsService.sendStats(statsService.getStats());
 
         return pane;
     }
@@ -431,6 +434,7 @@ public class NewStatsView {
 
         hBox.setSpacing(25);
         hBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(25);
         bottomBox.setAlignment(Pos.CENTER);
 
         Button nextStat = new Button("Roll My Stats!");
