@@ -4,13 +4,13 @@ import com.d20.main.Utilities;
 import com.d20.model.Stat;
 import com.d20.model.Stats;
 import org.jasypt.util.text.BasicTextEncryptor;
-import org.jasypt.util.text.TextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.testng.collections.Lists;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -31,20 +31,12 @@ public class StatsService {
     private Environment env;
 
     @Autowired
-    private Stats stats;
-
-    @Autowired
     private DiceService diceService;
 
     @Autowired
     private Utilities utils;
 
     public StatsService(){}
-
-    public Stats getStats(){
-        return stats;
-    }
-
 
     private int statsTotal;
 
@@ -74,8 +66,9 @@ public class StatsService {
         return statsTotal;
     }
 
-    public void rollAllStats(){
+    public Stats rollAllStats(){
 
+        Stats stats = new Stats();
         stats.setStrength(new Stat("Strength", rollStat()));
         stats.setDexterity(new Stat("Dexterity", rollStat()));
         stats.setConstitution(new Stat("Constitution", rollStat()));
@@ -89,6 +82,8 @@ public class StatsService {
                 stats.getIntelligence().getStat() +
                 stats.getWisdom().getStat() +
                 stats.getCharisma().getStat();
+
+        return stats;
     }
 
     public int getStatsTotal() {
@@ -106,19 +101,21 @@ public class StatsService {
 
         Client client = ClientBuilder.newClient();
 
-        try {
+        if(stats != null) {
+            try {
 
-            Response response = client.target(env.getProperty("d20.services.stats.endpoint"))
-                    .request(MediaType.APPLICATION_JSON)
-                    .header("JWT", token)
-                    .put(Entity.json(stats));
+                Response response = client.target(env.getProperty("d20.services.stats.endpoint"))
+                        .request(MediaType.APPLICATION_JSON)
+                        .header("JWT", token)
+                        .put(Entity.json(stats));
 
-            if(response.getStatus() != 200) throw new Exception();
+                if (response.getStatus() != 200) throw new Exception();
 
-        } catch (Exception e) {
-            log.error("Failed to sync new character stats: {}", e);
-        } finally {
-            client.close();
+            } catch (Exception e) {
+                log.error("Failed to sync new character stats: {}", e);
+            } finally {
+                client.close();
+            }
         }
 
     }

@@ -14,12 +14,14 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import jersey.repackaged.com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class NewStatsView {
@@ -78,16 +80,14 @@ public class NewStatsView {
 
     }
 
-    public FlowPane getNewStatsView(boolean showTemp){
-        return getNewStatsView(showTemp, false);
+    public FlowPane getNewStatsView(Stats stats, boolean showTemp){
+        return getNewStatsView(stats, showTemp, false);
     }
 
-    public FlowPane getNewStatsView(boolean showTemp, boolean showTotal) {
-
-        statsService.rollAllStats();
+    public FlowPane getNewStatsView(Stats stats, boolean showTemp, boolean showTotal) {
 
         FlowPane flowPane = new FlowPane();
-        VBox firstStat = new VBox();
+        VBox statVbox = new VBox();
         GridPane statsDescBox = new GridPane();
 
         flowPane.getStylesheets().add("../resources/css/stats.css");
@@ -105,28 +105,27 @@ public class NewStatsView {
         statsDescBox.addColumn(2, modifier);
         statsDescBox.getColumnConstraints().addAll(col, col, col);
 
-        firstStat.getChildren().add(statsDescBox);
+        statVbox.getChildren().add(statsDescBox);
 
         statsDescBox.getStyleClass().add("stats-header");
 
-        Stats stats = statsService.getStats();
-        firstStat.getChildren().add(statsView(stats.getStrength(), showTemp));
-        firstStat.getChildren().add(statsView(stats.getDexterity(), showTemp));
-        firstStat.getChildren().add(statsView(stats.getConstitution(), showTemp));
-        firstStat.getChildren().add(statsView(stats.getIntelligence(), showTemp));
-        firstStat.getChildren().add(statsView(stats.getWisdom(), showTemp));
-        firstStat.getChildren().add(statsView(stats.getCharisma(), showTemp));
+        statVbox.getChildren().add(statsView(stats.getStrength(), showTemp));
+        statVbox.getChildren().add(statsView(stats.getDexterity(), showTemp));
+        statVbox.getChildren().add(statsView(stats.getConstitution(), showTemp));
+        statVbox.getChildren().add(statsView(stats.getIntelligence(), showTemp));
+        statVbox.getChildren().add(statsView(stats.getWisdom(), showTemp));
+        statVbox.getChildren().add(statsView(stats.getCharisma(), showTemp));
 
         HBox statBox = new HBox();
         statBox.setSpacing(50);
         statBox.setAlignment(Pos.CENTER);
-        firstStat.getChildren().add(statBox);
+        statVbox.getChildren().add(statBox);
 
         if(showTotal){
             HBox statsTotal = new HBox(15);
             statsTotal.setAlignment(Pos.CENTER);
             Text statsTotalText = new Text("Ability Totals: ");
-            Text statsTotalValue = new Text(String.valueOf(statsService.getStatsTotal()));
+            Text statsTotalValue = new Text(String.valueOf(stats.getStatsTotal()));
 
             Button selectStats = new Button("Select These Stats");
             selectStats.setTextAlignment(TextAlignment.CENTER);
@@ -137,14 +136,14 @@ public class NewStatsView {
 
             statsTotal.getChildren().addAll(statsTotalText, statsTotalValue, selectStats);
 
-            firstStat.getChildren().addAll(statsTotal);
+            statVbox.getChildren().addAll(statsTotal);
         }
 
         statBox.getStyleClass().add("stats-box");
         statsDescBox.getStyleClass().add("stats-box");
-        firstStat.getStyleClass().add("statspane");
+        statVbox.getStyleClass().add("statspane");
 
-        flowPane.getChildren().add(firstStat);
+        flowPane.getChildren().add(statVbox);
 
         statsService.getStatsTotal();
 
@@ -161,7 +160,10 @@ public class NewStatsView {
 
         Button backButton = new Button("Back");
         backButton.setOnMouseClicked(e -> viewService.getMainMenu());
-        vBox.getChildren().addAll(getNewStatsView(false), backButton);
+        if(statsService.getStatsList().isEmpty()) {
+            statsService.rollAllStats();
+        }
+        vBox.getChildren().addAll(getNewStatsView(statsService.getStatsList().get(0), false), backButton);
 
         pane.setLeft(vBox);
 
@@ -181,8 +183,9 @@ public class NewStatsView {
         hBox.setPadding(new Insets(15,15,15,15));
         hBox2.setPadding(new Insets(15,15,15,15));
 
-        hBox.getChildren().addAll(getNewStatsView(false, true), getNewStatsView(false, true));
-        hBox2.getChildren().add(getNewStatsView(false, true));
+        hBox.getChildren().addAll(getNewStatsView(statsService.rollAllStats(), false, true),
+                getNewStatsView(statsService.rollAllStats(), false, true));
+        hBox2.getChildren().add(getNewStatsView(statsService.rollAllStats(), false, true));
 
         StringBuilder statsDesc = new StringBuilder();
 

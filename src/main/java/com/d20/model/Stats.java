@@ -66,4 +66,9 @@ public class Stats implements Serializable {
     public void setCharisma(Stat charisma) {
         this.charisma = charisma;
     }
+
+    public int getStatsTotal(){
+        return strength.getStat() + dexterity.getStat() + constitution.getStat() + intelligence.getStat()
+                + wisdom.getStat() + charisma.getStat();
+    }
 }
