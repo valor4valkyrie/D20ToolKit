@@ -1,7 +1,10 @@
 package com.d20.view.future;
 
 import com.d20.main.Utilities;
+import com.d20.model.Character;
+import com.d20.model.CharacterClassImpl;
 import com.d20.model.future.FutureClassDescription;
+import com.d20.services.CharacterService;
 import com.d20.services.ImageService;
 import com.d20.services.ViewService;
 import com.d20.view.MainMenu;
@@ -32,10 +35,20 @@ public class NewFutureView {
     private ImageService imageService;
 
     @Autowired
+    private CharacterService characterService;
+
+    @Autowired
     private Utilities utilities;
 
     @Autowired
     private NewFutureStatsView newFutureStatsView;
+
+    final static String SMART_HERO = "Smart Hero";
+    final static String TOUGH_HERO = "Tough Hero";
+    final static String FAST_HERO = "Fast Hero";
+    final static String DEDICATED_HERO = "Dedicated Hero";
+    final static String STRONG_HERO = "Strong Hero";
+    final static String CHARISMATIC_HERO = "Charismatic Hero";
 
     public NewFutureView(){
     }
@@ -139,36 +152,71 @@ public class NewFutureView {
         //Button Actions
         back.setOnMouseClicked(e -> viewService.setMainScene(getNewCharacter(), viewService.isFullScreen()));
         //--Smart Hero
-        smartHero.setOnMouseClicked(e -> viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen()));
+        smartHero.setOnMouseClicked(e -> {
+            Character character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(SMART_HERO, 1));
+            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+        });
         smartHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getSmartHeroDesc());
         });
 
+        //--Strong Hero
+        strongHero.setOnMouseClicked(e -> {
+            Character character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(STRONG_HERO, 1));
+            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+        });
         strongHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getStrongHeroDesc());
         });
 
+        //--Fast Hero
+        fastHero.setOnMouseClicked(e -> {
+            Character character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(FAST_HERO, 1));
+            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+        });
         fastHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getFastHeroDesc());
         });
 
+        //--Tough Hero
+        toughHero.setOnMouseClicked(e -> {
+            Character character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(TOUGH_HERO, 1));
+            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+        });
         toughHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getToughHeroDesc());
         });
 
+        //--Charismatic Hero
+        charismaticHero.setOnMouseClicked(e -> {
+            Character character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(CHARISMATIC_HERO, 1));
+            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+        });
         charismaticHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getCharismaticHeroDesc());
         });
 
+        //--Dedicated Hero
+        dedicatedHero.setOnMouseClicked(e -> {
+            Character character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(DEDICATED_HERO, 1));
+            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+        });
         dedicatedHero.setOnMouseEntered(e -> {
             textArea.clear();
             textArea.setText(classDescription.getDedicatedHeroDesc());
         });
+
         descriptionBox.getChildren().addAll(classDescriptionLabel, textArea);
         flowPane.getChildren().addAll(fastHero, smartHero, strongHero, toughHero, charismaticHero, dedicatedHero, back);
 
