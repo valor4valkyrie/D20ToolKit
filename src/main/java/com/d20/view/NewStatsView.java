@@ -2,6 +2,7 @@ package com.d20.view;
 
 import com.d20.model.Stat;
 import com.d20.model.Stats;
+import com.d20.services.CharacterService;
 import com.d20.services.ImageService;
 import com.d20.services.StatsService;
 import com.d20.services.ViewService;
@@ -34,6 +35,9 @@ public class NewStatsView {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private CharacterService characterService;
 
     public NewStatsView() {
     }
@@ -160,10 +164,8 @@ public class NewStatsView {
 
         Button backButton = new Button("Back");
         backButton.setOnMouseClicked(e -> viewService.getMainMenu());
-        if(statsService.getStatsList().isEmpty()) {
-            statsService.rollAllStats();
-        }
-        vBox.getChildren().addAll(getNewStatsView(statsService.getStatsList().get(0), false), backButton);
+
+        vBox.getChildren().addAll(getNewStatsView(statsService.rollAllStats(), false), backButton);
 
         pane.setLeft(vBox);
 
