@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.testng.collections.Lists;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -35,6 +34,9 @@ public class StatsService {
 
     @Autowired
     private Utilities utils;
+
+    @Autowired
+    private CharacterService characterService;
 
     public StatsService(){}
 
@@ -83,6 +85,7 @@ public class StatsService {
                 stats.getWisdom().getStat() +
                 stats.getCharisma().getStat();
 
+        characterService.setCharacterStats(-1L, stats);
         return stats;
     }
 

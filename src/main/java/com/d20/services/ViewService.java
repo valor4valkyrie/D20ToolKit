@@ -1,9 +1,13 @@
 package com.d20.services;
 
+import com.d20.model.Stats;
+import com.d20.view.CharacterSheet;
+import com.d20.view.CharacterSheetImpl;
 import com.d20.view.MainMenu;
 import com.d20.view.future.FutureView;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -12,19 +16,26 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ViewService {
 
     @Autowired
-    Stage stage;
+    private Stage stage;
 
     @Autowired
-    FutureView futureView;
+    private FutureView futureView;
 
     @Autowired
     private MainMenu mainMenu;
 
+    @Autowired
+    private CharacterService characterService;
+
     private String style = "default";
+
+    private CharacterSheet characterSheet;
 
     private Image ddBackgroundImage = new Image("./images/DDBackground.jpg");
     private BackgroundImage backgroundImage = new BackgroundImage(ddBackgroundImage, BackgroundRepeat.REPEAT,
@@ -108,7 +119,7 @@ public class ViewService {
         return menubar;
     }
 
-    public Scene getCurrentScene(){return stage.getScene();}
+    public Scene getCurrentScene(){ return stage.getScene(); }
 
     public Stage getStage() {
         return stage;
@@ -129,4 +140,28 @@ public class ViewService {
     public String getStyle() { return style; }
 
     public void setStyle(String style) { this.style = style; }
+
+    public List<Node> getSceneElements(){
+        List<Node> nodesList = stage.getScene().getRoot().getChildrenUnmodifiable();
+        return nodesList;
+    }
+
+    public Pane getCharacterSheet(long id){
+        com.d20.model.Character character = characterService.getCharacter(id);
+
+        if(character == null) {
+            characterSheet = new CharacterSheetImpl(character);
+        }
+
+        return characterSheet.getCharacterSheet();
+
+    }
+
+    public void setCharacterSheet(com.d20.model.Character character){
+        this.characterSheet = new CharacterSheetImpl(character);
+    }
+
+    public void setCharacterStats(Stats stats){
+
+    }
 }
