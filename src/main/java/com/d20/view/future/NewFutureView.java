@@ -7,6 +7,7 @@ import com.d20.model.future.FutureClassDescription;
 import com.d20.services.CharacterService;
 import com.d20.services.ImageService;
 import com.d20.services.ViewService;
+import com.d20.view.AnimationTest;
 import com.d20.view.MainMenu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -230,25 +231,4 @@ public class NewFutureView {
         return borderPane;
     }
 
-    public BorderPane getSmartHero(){
-        BorderPane borderPane = new BorderPane();
-
-        FlowPane flowPane = new FlowPane();
-
-        Text description = new Text("Smart Heroes are smart.");
-
-        Button back = new Button("Back");
-
-        //Button Actions
-        back.setOnMouseClicked(e -> viewService.setMainScene(classNewCharacter(), viewService.isFullScreen()));
-
-        back.getStyleClass().add("back-button");
-        back.setPrefSize(225, 300);
-        borderPane.getStylesheets().add("../resources/css/stats.css");
-
-        flowPane.getChildren().addAll(back, description);
-        borderPane.setCenter(flowPane);
-
-        return borderPane;
-    }
 }

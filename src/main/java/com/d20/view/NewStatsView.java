@@ -1,31 +1,38 @@
 package com.d20.view;
 
-import com.d20.model.Stat;
+import com.d20.model.Character;
 import com.d20.model.Stats;
 import com.d20.services.CharacterService;
 import com.d20.services.ImageService;
 import com.d20.services.StatsService;
 import com.d20.services.ViewService;
 import com.d20.view.future.FutureView;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
+import javafx.scene.shape.ClosePath;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import jersey.repackaged.com.google.common.collect.Lists;
+import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Stream;
 
-public class NewStatsView {
+public class NewStatsView extends StatsViewImpl{
 
     @Autowired
     private ViewService viewService;
@@ -44,237 +51,71 @@ public class NewStatsView {
 
     public NewStatsView(String style) {}
 
-    public GridPane statsView(Stat aStat, boolean showTemp){
 
-        GridPane statsBox = new GridPane();
 
-        ColumnConstraints col = new ColumnConstraints();
-        col.setPrefWidth(225);
-        col.setHalignment(HPos.CENTER);
+    public Group starShape(){
+        Group group = new Group();
 
-        Text statDescription = new Text(aStat.getName());
-        Text statValue = new Text(String.valueOf(aStat.getStat()));
-        Text statMod = new Text(String.valueOf(aStat.getModifier()));
-        Text statTemp = new Text(String.valueOf(aStat.getTempStat()));
-        Text statTempMod = new Text(String.valueOf(aStat.getTempMod()));
+        // Create a Triangle
+        javafx.scene.shape.Path triangle = new javafx.scene.shape.Path(new MoveTo(0, 0),
+                new LineTo(0, 50),
+                new LineTo(50, 50),
+                new ClosePath());
 
-        TextArea statExplaination = new TextArea();
+        // Create a Star
+        javafx.scene.shape.Path star = new javafx.scene.shape.Path(new MoveTo(30, 0),
+                new LineTo(0, 30),
+                new LineTo(60, 30),
+                new ClosePath(),
+                new MoveTo(0, 10),
+                new LineTo(60, 10),
+                new LineTo(30, 40),
+                new ClosePath());
 
-        if (showTemp) {
-            statsBox.addColumn(0, statDescription);
-            statsBox.addColumn(1, statValue);
-            statsBox.addColumn(2, statMod);
-            statsBox.addColumn(3, statTemp);
-            statsBox.addColumn(4, statTempMod);
-            statsBox.getColumnConstraints().addAll(col, col, col, col, col);
-        } else {
-            statsBox.addColumn(0, statDescription);
-            statsBox.addColumn(1, statValue);
-            statsBox.addColumn(2, statMod);
-            statsBox.getColumnConstraints().addAll(col, col, col);
-        }
+        group.getChildren().add(star);
 
-        try {
-            Path smartPath = Paths.get(getClass().getClassLoader()
-                    .getResource("./guide/strengthStatGuide.txt").toURI());
-            statsBox.getStyleClass().add("stats-box");
-        } catch (URISyntaxException e){System.out.print(e);}
 
-        return statsBox;
-
+        return group;
     }
 
-    public FlowPane getNewStatsView(Stats stats, boolean showTemp){
-        return getNewStatsView(stats, showTemp, false);
-    }
 
-    public FlowPane getNewStatsView(Stats stats, boolean showTemp, boolean showTotal) {
-
-        FlowPane flowPane = new FlowPane();
-        VBox statVbox = new VBox();
-        GridPane statsDescBox = new GridPane();
-
-        flowPane.getStylesheets().add("../resources/css/stats.css");
-
-        ColumnConstraints col = new ColumnConstraints();
-        col.setPrefWidth(225);
-        col.setHalignment(HPos.CENTER);
-
-        Text name = new Text("Abilities");
-        Text stat = new Text("Ability Score");
-        Text modifier = new Text("Ability Modifier");
-
-        statsDescBox.addColumn(0, name);
-        statsDescBox.addColumn(1, stat);
-        statsDescBox.addColumn(2, modifier);
-        statsDescBox.getColumnConstraints().addAll(col, col, col);
-
-        statVbox.getChildren().add(statsDescBox);
-
-        statsDescBox.getStyleClass().add("stats-header");
-
-        statVbox.getChildren().add(statsView(stats.getStrength(), showTemp));
-        statVbox.getChildren().add(statsView(stats.getDexterity(), showTemp));
-        statVbox.getChildren().add(statsView(stats.getConstitution(), showTemp));
-        statVbox.getChildren().add(statsView(stats.getIntelligence(), showTemp));
-        statVbox.getChildren().add(statsView(stats.getWisdom(), showTemp));
-        statVbox.getChildren().add(statsView(stats.getCharisma(), showTemp));
-
-        HBox statBox = new HBox();
-        statBox.setSpacing(50);
-        statBox.setAlignment(Pos.CENTER);
-        statVbox.getChildren().add(statBox);
-
-        if(showTotal){
-            HBox statsTotal = new HBox(15);
-            statsTotal.setAlignment(Pos.CENTER);
-            Text statsTotalText = new Text("Ability Totals: ");
-            Text statsTotalValue = new Text(String.valueOf(stats.getStatsTotal()));
-
-            Button selectStats = new Button("Select These Stats");
-            selectStats.setTextAlignment(TextAlignment.CENTER);
-            selectStats.setOnMouseClicked(event -> {
-                selectStats.setDisable(true);
-                statsService.sendStats(stats);
-            });
-
-            statsTotal.getChildren().addAll(statsTotalText, statsTotalValue, selectStats);
-
-            statVbox.getChildren().addAll(statsTotal);
-        }
-
-        statBox.getStyleClass().add("stats-box");
-        statsDescBox.getStyleClass().add("stats-box");
-        statVbox.getStyleClass().add("statspane");
-
-        flowPane.getChildren().add(statVbox);
-
-        statsService.getStatsTotal();
-
-        return flowPane;
-    }
-
-    public Pane getSingleRolledStats() {
-
+    public void selectAnimations(FlowPane flowPane){
         BorderPane pane = new BorderPane();
 
-        VBox vBox = new VBox(15);
 
-        FutureView f = viewService.getFutureView();
+        /*javafx.scene.shape.Path path = new javafx.scene.shape.Path();
+        path.getElements().add(new MoveTo(viewService.getScreenWidth() / 2,viewService.getScreenHeight() / 2));
+        path.getElements().add(new CubicCurveTo(380, 0, 380, 120, 200, 120));
+        path.getElements().add(new CubicCurveTo(0, 120, 0, 240, 380, 240));
+        PathTransition pathTransition = new PathTransition();
+        pathTransition.setDuration(Duration.millis(4000));
+        pathTransition.setPath(path);
+        pathTransition.setNode(hbox);
+        pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+        pathTransition.setCycleCount(Timeline.INDEFINITE);
+        pathTransition.setAutoReverse(true);
 
-        Button backButton = new Button("Back");
-        backButton.setOnMouseClicked(e -> viewService.getMainMenu());
+        pathTransition.play();*/
 
-        vBox.getChildren().addAll(getNewStatsView(statsService.rollAllStats(), false), backButton);
-
-        pane.setLeft(vBox);
-
-        backButton.getStyleClass().add("back-button");
-
-        return pane;
-
+        viewService.setMainScene(pane, true);
     }
 
-    public Pane getAllRolledStats() {
-        BorderPane pane = new BorderPane();
+    public void removeNodes(){
+        Scene scene = viewService.getCurrentScene();
+        BorderPane borderPane = (BorderPane) scene.getRoot().getChildrenUnmodifiable().get(0);
+        ScrollPane scrollPane = (ScrollPane) borderPane.getChildren().get(1);
+        StackPane stack = (StackPane) scrollPane.getChildrenUnmodifiable().get(3);
+        stack.getChildren().forEach(each -> each.setVisible(false));
 
-        HBox hBox = new HBox(15);
-        HBox hBox2 = new HBox(15);
-        hBox.setAlignment(Pos.CENTER);
-        hBox2.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(15,15,15,15));
-        hBox2.setPadding(new Insets(15,15,15,15));
-
-        hBox.getChildren().addAll(getNewStatsView(statsService.rollAllStats(), false, true),
-                getNewStatsView(statsService.rollAllStats(), false, true));
-        hBox2.getChildren().add(getNewStatsView(statsService.rollAllStats(), false, true));
-
-        StringBuilder statsDesc = new StringBuilder();
-
-        try {
-            Path smartPath = Paths.get(getClass().getClassLoader()
-                    .getResource("./guide/rolledStatsGuide.txt").toURI());
-            Stream<String> lines = Files.lines(smartPath);
-            lines.forEach(line -> statsDesc.append(line));
-            lines.close();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        pane.setTop(hBox);
-        pane.setCenter(hBox2);
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Explorer"), BackgroundPosition.CENTER));
-
-
-        TextArea textArea = new TextArea(statsDesc.toString());
-        textArea.getStyleClass().add("text-area");
-        textArea.setWrapText(true);
-
-        pane.setBottom(textArea);
-
-        return pane;
+        viewService.setMainScene(borderPane, true);
     }
 
-    public Pane getGuidedStatsText(){
-        FlowPane pane = new FlowPane();
 
-        StringBuilder statsDesc = new StringBuilder();
-
-        try {
-            Path smartPath = Paths.get(getClass().getClassLoader()
-                    .getResource("./guide/statsGuide.txt").toURI());
-            Stream<String> lines = Files.lines(smartPath);
-            lines.forEach(line -> statsDesc.append(line).append("\n"));
-            lines.close();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        TextArea textArea = new TextArea(statsDesc.toString());
-        textArea.setPrefWidth(viewService.getScreenWidth() - 100);
-        textArea.getStyleClass().add("text-area");
-        textArea.setWrapText(true);
-        textArea.setMinHeight(viewService.getScreenHeight() / 4);
-        textArea.setEditable(false);
-
-        pane.getChildren().add(textArea);
-
-        return pane;
-    }
-
-    public Pane getStatsGuideText(String stat){
-        FlowPane pane = new FlowPane();
-
-        StringBuilder statsDesc = new StringBuilder();
-
-        try {
-            Path smartPath = Paths.get(getClass().getClassLoader()
-                    .getResource("./guide/" + stat + "StatGuide.txt").toURI());
-            Stream<String> lines = Files.lines(smartPath);
-            lines.forEach(line -> statsDesc.append(line).append("\n"));
-            lines.close();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        TextArea textArea = new TextArea(statsDesc.toString());
-        textArea.setEditable(false );
-        textArea.getStyleClass().add("text-area");
-        textArea.setWrapText(true);
-        textArea.setMinHeight(viewService.getScreenHeight() / 4);
-        textArea.setMinWidth(viewService.getScreenWidth() - 200);
-
-        pane.getChildren().add(textArea);
-        pane.getStyleClass().add("pane");
-
-        return pane;
-    }
 
     public Pane getGuidedStatsPane(){
 
         BorderPane pane = new BorderPane();
         Button statsStartButton = new Button("Start Stats");
-        statsStartButton.getStyleClass().add("");
         statsStartButton.setOnMouseClicked(e -> {getGuidedStrength();});
         HBox topBox = new HBox(getGuidedStatsText());
         HBox centerBox = new HBox(getSingleRolledStats());
@@ -303,6 +144,33 @@ public class NewStatsView {
 
         return pane;
 
+    }
+
+    public Pane getGuidedStatsText(){
+        FlowPane pane = new FlowPane();
+
+        StringBuilder statsDesc = new StringBuilder();
+
+        try {
+            Path smartPath = Paths.get(getClass().getClassLoader()
+                    .getResource("./guide/statsGuide.txt").toURI());
+            Stream<String> lines = Files.lines(smartPath);
+            lines.forEach(line -> statsDesc.append(line).append("\n"));
+            lines.close();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        TextArea textArea = new TextArea(statsDesc.toString());
+        textArea.setPrefWidth(viewService.getScreenWidth() - 100);
+        textArea.getStyleClass().add("text-area");
+        textArea.setWrapText(true);
+        textArea.setMinHeight(viewService.getScreenHeight() / 4);
+        textArea.setEditable(false);
+
+        pane.getChildren().add(textArea);
+
+        return pane;
     }
 
     public void getGuidedStrength(){
