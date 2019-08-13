@@ -1,6 +1,7 @@
 package com.d20.model;
 
 import org.springframework.stereotype.Component;
+import org.testng.collections.Lists;
 
 import java.io.Serializable;
 import java.util.*;
@@ -70,5 +71,19 @@ public class Stats implements Serializable {
     public int getStatsTotal(){
         return strength.getStat() + dexterity.getStat() + constitution.getStat() + intelligence.getStat()
                 + wisdom.getStat() + charisma.getStat();
+    }
+
+    public List<Stat> getStatsList(){
+        List<Stat> statList = Lists.newArrayList();
+
+        statList.add(getStrength());
+        statList.add(getDexterity());
+        statList.add(getConstitution());
+        statList.add(getIntelligence());
+        statList.add(getWisdom());
+        statList.add(getCharisma());
+
+        return statList;
+
     }
 }
