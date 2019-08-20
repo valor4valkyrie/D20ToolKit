@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 
 public interface StatsView {
 
-    GridPane getStatsView(boolean showTemp);
+    Pane getStatsView(boolean showTemp);
 
     Pane getStatsGuideText(String stat);
 }

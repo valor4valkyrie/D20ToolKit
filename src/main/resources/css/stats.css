@@ -27,6 +27,7 @@
     -fx-border-insets: 5 5 5 5;
     -fx-border-radius: 15;
     -fx-background-radius: 15;
+    -fx-padding: 5px;
 }
 
 .stats-box {

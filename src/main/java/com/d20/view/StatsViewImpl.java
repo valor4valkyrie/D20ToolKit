@@ -11,6 +11,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -51,21 +52,36 @@ public class StatsViewImpl implements StatsView {
         this.stats = stats;
     }
 
-    public GridPane getStatsView(boolean showTemp){
+    public Pane getStatsView(boolean showTemp){
 
         GridPane statsBox = new GridPane();
+
+        statsBox.setHgap(25);
+        statsBox.setPadding(new Insets(25));
 
         ColumnConstraints col = new ColumnConstraints();
         col.setHalignment(HPos.CENTER);
 
-        Text name = new Text("Abilities");
-        Text stat = new Text("Ability Score");
-        Text modifier = new Text("Ability Modifier");
+        Label name = new Label("Abilities");
+        Label stat = new Label("Ability Score");
+        Label modifier = new Label("Ability Modifier");
 
+        name.getStyleClass().add("stats-header");
+        stat.getStyleClass().add("stats-header");
+        modifier.getStyleClass().add("stats-header");
+
+        statsBox.setHgap(25);
+        statsBox.setPadding(new Insets(15));
         statsBox.addColumn(0, name);
         statsBox.addColumn(1, stat);
         statsBox.addColumn(2, modifier);
-        statsBox.getColumnConstraints().addAll(col, col, col);
+
+        if(showTemp){
+            statsBox.getColumnConstraints().addAll(col, col, col, col, col);
+        } else {
+            statsBox.getColumnConstraints().addAll(col, col, col);
+        }
+
 
         if (stats == null || stats.getStatsList().isEmpty()) {
             stats = statsService.rollAllStats();
@@ -78,18 +94,16 @@ public class StatsViewImpl implements StatsView {
             Text statTemp = new Text(String.valueOf(aStat.getTempStat()));
             Text statTempMod = new Text(String.valueOf(aStat.getTempMod()));
 
-            if (showTemp) {
+            if (showTemp == true) {
                 statsBox.addColumn(0, statDescription);
                 statsBox.addColumn(1, statValue);
                 statsBox.addColumn(2, statMod);
                 statsBox.addColumn(3, statTemp);
                 statsBox.addColumn(4, statTempMod);
-                statsBox.getColumnConstraints().addAll(col, col, col, col, col);
             } else {
                 statsBox.addColumn(0, statDescription);
                 statsBox.addColumn(1, statValue);
                 statsBox.addColumn(2, statMod);
-                statsBox.getColumnConstraints().addAll(col, col, col);
             }
 
         });
@@ -139,8 +153,6 @@ public class StatsViewImpl implements StatsView {
         flowPane.getStylesheets().add("../resources/css/stats.css");
 
         statVbox.getChildren().add(statsDescBox);
-
-        //statsDescBox.getStyleClass().add("stats-header");
 
         statVbox.getChildren().add(getStatsView(false));
 
