@@ -1,15 +1,9 @@
 package com.d20.view;
 
-import com.d20.model.Character;
-import com.d20.model.Stats;
 import com.d20.services.CharacterService;
 import com.d20.services.ImageService;
 import com.d20.services.StatsService;
 import com.d20.services.ViewService;
-import com.d20.view.future.FutureView;
-import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -19,12 +13,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.shape.ClosePath;
-import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Files;
