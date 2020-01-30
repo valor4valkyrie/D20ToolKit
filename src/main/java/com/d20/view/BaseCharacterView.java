@@ -1,4 +1,4 @@
-package com.d20.view.future;
+package com.d20.view;
 
 import javafx.scene.layout.VBox;
 

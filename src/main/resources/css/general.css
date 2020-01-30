@@ -30,3 +30,21 @@
     -fx-background-radius: 15;
     -fx-background-color: gray;
 }
+
+.pane-box-background {
+    -fx-border-color: black;
+    -fx-border-width: 5;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-padding: 25;
+    -fx-border-width: 3;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: gray;
+}
+
+.tab-pane {
+    -fx-padding: 1;
+    -fx-background-color: lightGray;
+    -fx-background-insets: 0, 1;
+}

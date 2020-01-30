@@ -1,4 +1,4 @@
-package com.d20.view.future;
+package com.d20.view;
 
 public class LoadCharacterView {
 }

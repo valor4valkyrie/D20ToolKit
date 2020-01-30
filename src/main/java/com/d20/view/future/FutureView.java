@@ -10,15 +10,4 @@ public class FutureView {
     @Autowired
     private ViewService viewService;
 
-    @Autowired
-    private NewFutureView newFutureView;
-
-    public FutureView(){
-
-    }
-
-    public void newFutureView(){
-        viewService.setMainScene(newFutureView.getNewCharacter(), viewService.isFullScreen());
-    }
-    
 }

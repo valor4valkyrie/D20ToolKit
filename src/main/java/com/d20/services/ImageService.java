@@ -11,6 +11,10 @@ import java.util.List;
 @Service
 public class ImageService{
 
+    public ImageService(){
+
+    }
+
     public ImageView getD20FutureCover(){
         return new ImageView(new Image("./images/D20_Future_Book_Cover.jpg"));
     }

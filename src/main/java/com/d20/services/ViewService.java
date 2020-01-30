@@ -1,10 +1,8 @@
 package com.d20.services;
 
 import com.d20.model.Stats;
-import com.d20.view.CharacterSheet;
-import com.d20.view.CharacterSheetImpl;
+import com.d20.view.CharacterSheetView;
 import com.d20.view.MainMenu;
-import com.d20.view.future.FutureView;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -12,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,29 +20,30 @@ import java.util.List;
 @Service
 public class ViewService {
 
-    @Autowired
-    private Stage stage;
-
-    @Autowired
-    private FutureView futureView;
-
-    @Autowired
+    private static Stage stage;
     private MainMenu mainMenu;
-
-    @Autowired
-    private CharacterService characterService;
 
     private String style = "default";
 
-    private CharacterSheet characterSheet;
+    private CharacterSheetView characterSheetView;
 
     private Image ddBackgroundImage = new Image("./images/DDBackground.jpg");
     private BackgroundImage backgroundImage = new BackgroundImage(ddBackgroundImage, BackgroundRepeat.REPEAT,
             BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 
-    public ViewService(){}
+    public ViewService(){
+    }
 
-    public void setMainScene(Pane pane, boolean fullscreen){
+    @Autowired
+    public ViewService(Stage stage){
+        this.stage = stage;
+    }
+
+    public Scene getCurrentScene(){
+        return stage.getScene();
+    }
+
+    public void setMainScene(Pane pane){
         pane.setPadding(new Insets(15, 15, 25, 15));
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -68,30 +68,85 @@ public class ViewService {
                 break;
         }
 
-/*        Background background = new Background(backgroundImage);;
-        borderPane.setBackground(background);
-        pane.setBackground(background);*/
-
         Scene scene = new Scene(stackPane,  stage.getWidth() - 100, stage.getHeight());
         scene.getStylesheets().add("../resources/css/general.css");
         stage.setScene(scene);
-        stage.setFullScreen(fullscreen);
+        stage.setFullScreen(true);
         stage.setTitle("D20 Toolkit");
         stage.show();
     }
 
-    public void getMainMenu(){
-        setMainScene(mainMenu.getMainMenu(), true);
+    // TODO: Refactor out both 'setMainScene(Pane)' and 'setMainScene(TabPane)' to share functionality
+    public void setMainScene(TabPane pane){
+        pane.setPadding(new Insets(15, 15, 25, 15));
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setContent(pane);
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(getMenuBar());
+        borderPane.setCenter(scrollPane);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(borderPane);
+
+        switch (style) {
+            case "future":
+                pane.getStylesheets().add("../resources/css/future.css");
+                break;
+            default:
+                pane.getStylesheets().add("../resources/css/stats.css");
+                break;
+        }
+
+        Scene scene = new Scene(stackPane,  stage.getWidth() - 100, stage.getHeight());
+        scene.getStylesheets().add("../resources/css/general.css");
+        stage.setScene(scene);
+        stage.setFullScreen(true);
+        stage.setTitle("D20 Toolkit");
+        stage.show();
     }
 
-    public boolean isFullScreen(){
-        return stage.isFullScreen();
+    public void setMainScene(Pane pane, Stage stage){
+        pane.setPadding(new Insets(15, 15, 25, 15));
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setContent(pane);
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(getMenuBar());
+        borderPane.setCenter(scrollPane);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(borderPane);
+
+        switch (style) {
+            case "future":
+                pane.getStylesheets().add("../resources/css/future.css");
+                break;
+            default:
+                pane.getStylesheets().add("../resources/css/stats.css");
+                break;
+        }
+
+        Scene scene = new Scene(stackPane,  getScreenWidth() - 100, getScreenHeight());
+        scene.getStylesheets().add("../resources/css/general.css");
+        stage.setScene(scene);
+        stage.setFullScreen(true);
+        stage.setTitle("D20 Toolkit");
+        stage.show();
     }
 
     public MenuBar getMenuBar(){
         //MenuBar
         MenuBar menubar = new MenuBar();
-        menubar.setPrefWidth(stage.getWidth());
+        menubar.setPrefWidth(this.getStage().getWidth());
 
         //Menus
         Menu file = new Menu("File");
@@ -106,7 +161,7 @@ public class ViewService {
 
         //MenuItems actions
         exit.setOnAction(e -> Platform.exit());
-        mainMenu.setOnAction(e -> this.getMainMenu());
+        //mainMenu.setOnAction(e -> this.getMainMenu(imageService, futureViewService));
 
         //Add MenuItems to Menus
         file.getItems().addAll(mainMenu, loadCharacter, exit);
@@ -119,22 +174,16 @@ public class ViewService {
         return menubar;
     }
 
-    public Scene getCurrentScene(){ return stage.getScene(); }
-
-    public Stage getStage() {
+    public static Stage getStage() {
         return stage;
     }
 
     public double getScreenWidth(){
-        return this.stage.getWidth() - 100;
+        return Screen.getPrimary().getBounds().getWidth() - 25;
     }
 
-    public double getScreenHeight(){
-        return this.stage.getHeight();
-    }
-
-    public FutureView getFutureView() {
-        return futureView;
+    public double getScreenHeight() {
+        return Screen.getPrimary().getBounds().getHeight();
     }
 
     public String getStyle() { return style; }
@@ -146,19 +195,25 @@ public class ViewService {
         return nodesList;
     }
 
-    public Pane getCharacterSheet(long id){
-        com.d20.model.Character character = characterService.getCharacter(id);
+    public TabPane getCharacterSheet(long id){
+        //PlayerCharacter character = characterService.getCharacter(id);
 
-        if(character == null) {
-            characterSheet = new CharacterSheetImpl(character);
-        }
+        /*if(character == null) {
+            Stats stats = new Stats();
+            stats.setStrength(new Stat("Charisma", 10));
+            stats.setDexterity(new Stat("Charisma", 10));
+            stats.setConstitution(new Stat("Constitution", 10));
+            stats.setIntelligence(new Stat("Charisma", 10));
+            stats.setWisdom(new Stat("Charisma", 10));
+            stats.setCharisma(new Stat("Charisma", 10));
+            characterSheet = new CharacterSheetImpl();
+            character.setStats(stats);
+            characterSheet.getCharacterSheet();
+            return new TabPane();
+        }*/
 
-        return characterSheet.getCharacterSheet();
+        return new TabPane();
 
-    }
-
-    public void setCharacterSheet(com.d20.model.Character character){
-        this.characterSheet = new CharacterSheetImpl(character);
     }
 
     public void setCharacterStats(Stats stats){

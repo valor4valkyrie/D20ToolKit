@@ -1,13 +1,10 @@
-package com.d20.main;
+package com.d20;
 
-import com.d20.model.ModelConfig;
 import com.d20.services.ViewService;
-import com.d20.view.ViewConfig;
+import com.d20.view.MainMenu;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 
 public class D20ToolKit extends Application{
 
@@ -17,15 +14,14 @@ public class D20ToolKit extends Application{
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.register(D20ToolKit.class);
         context.register(BeanConfig.class);
-        context.register(ModelConfig.class);
-        context.register(ViewConfig.class);
         context.refresh();
 
-        ViewService mainView = context.getBean(ViewService.class);
-        mainView.getMainMenu();
+        ViewService viewService = context.getBean(ViewService.class);
+        MainMenu mainMenu = context.getBean(MainMenu.class);
+
+        viewService.setMainScene(mainMenu.getMainMenu());
 
     }
-
 
     public static void main(final String[] args){
         launch(D20ToolKit.class, args);

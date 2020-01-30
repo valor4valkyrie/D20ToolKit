@@ -1,32 +1,22 @@
 package com.d20.model;
 
-import javax.persistence.*;
 import java.util.*;
 
-@Entity
-@Table(name = "STATS")
+
 public class StatsModel {
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+
     private long id;
 
-    @Column(name = "STR")
     private Stat strength;
 
-    @Column(name = "DEX")
     private Stat dexterity;
 
-    @Column(name = "CON")
     private Stat constitution;
 
-    @Column(name = "INT")
     private Stat intelligence;
 
-    @Column(name = "WIS")
     private Stat wisdom;
 
-    @Column(name = "CHA")
     private Stat charisma;
 
     public StatsModel(){}

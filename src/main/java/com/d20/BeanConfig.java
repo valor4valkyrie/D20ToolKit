@@ -1,20 +1,17 @@
-package com.d20.main;
+package com.d20;
 
+import com.d20.services.EventsService;
+import com.d20.services.ViewService;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 
 @Configuration
-@ComponentScan(basePackages = {"com.d20.services"})
+@ComponentScan
 @PropertySource(value = "../resources/application.properties")
 public class BeanConfig {
-
-    @Autowired
-    Environment env;
 
     @Bean
     public Stage stage(){
@@ -22,13 +19,13 @@ public class BeanConfig {
     }
 
     @Bean
-    public Utilities utilities(){
-        return new Utilities();
+    public ViewService viewService() {
+        return new ViewService(stage());
     }
 
     @Bean
-    public ApplicationContextProvider applicationContextProvider(){
-        return new ApplicationContextProvider();
+    public EventsService eventsService(){
+        return new EventsService(viewService());
     }
 
 }

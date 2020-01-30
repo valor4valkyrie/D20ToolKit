@@ -1,14 +1,10 @@
 package com.d20.view.future;
 
-import com.d20.main.Utilities;
-import com.d20.model.Character;
-import com.d20.model.CharacterClassImpl;
+import com.d20.model.PlayerCharacter;
+import com.d20.model.CharacterClass;
+import com.d20.services.*;
 import com.d20.model.future.FutureClassDescription;
-import com.d20.services.CharacterService;
-import com.d20.services.ImageService;
-import com.d20.services.ViewService;
-import com.d20.view.AnimationTest;
-import com.d20.view.MainMenu;
+import com.d20.view.NewStatsView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,7 +13,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,20 +24,9 @@ import java.util.stream.Stream;
 @Component
 public class NewFutureView {
 
-    @Autowired
-    private ViewService viewService;
-
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
+    private EventsService eventsService;
     private CharacterService characterService;
-
-    @Autowired
-    private Utilities utilities;
-
-    @Autowired
-    private NewFutureStatsView newFutureStatsView;
+    private NewStatsView newStatsView;
 
     final static String SMART_HERO = "Smart Hero";
     final static String TOUGH_HERO = "Tough Hero";
@@ -51,7 +35,21 @@ public class NewFutureView {
     final static String STRONG_HERO = "Strong Hero";
     final static String CHARISMATIC_HERO = "Charismatic Hero";
 
-    public NewFutureView(){
+    @Autowired
+    public NewFutureView(EventsService eventsService, ViewService viewService, CharacterService characterService) {
+        this.eventsService = eventsService;
+        this.characterService = characterService;
+        newStatsView = new NewStatsView(eventsService, viewService);
+    }
+
+    @Autowired
+    public void setEventsService(EventsService eventsService) {
+        this.eventsService = eventsService;
+    }
+
+    @Autowired
+    public  void setCharacterService(CharacterService characterService){
+        this.characterService = characterService;
     }
 
     public BorderPane getNewCharacter(){
@@ -72,8 +70,8 @@ public class NewFutureView {
         beginner.setPrefSize(750, 500);
         advanced.setPrefSize(750, 500);
 
-        back.setOnMouseClicked(e -> viewService.getMainMenu());
-        beginner.setOnMouseClicked(e -> viewService.setMainScene(classNewCharacter(), viewService.isFullScreen()));
+        //back.setOnMouseClicked(e -> viewService.getMainMenu());
+        beginner.setOnMouseClicked(e -> eventsService.setSceneEvent(classNewCharacter()));
 
         back.getStyleClass().add("navigation-button");
         back.setPrefSize(225, 300);
@@ -81,10 +79,10 @@ public class NewFutureView {
         vBox.getChildren().addAll(beginner, advanced, back);
         borderPane.setCenter(vBox);
         vBox.setAlignment(Pos.CENTER);
-        borderPane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("GeneticCatCharacter"), BackgroundPosition.CENTER));
-        borderPane.getStylesheets().add("../resources/css/stats.css");
+        borderPane.setBackground(new ImageService().createBackgroundImage(new ImageService().getFutureImage("GeneticCatCharacter"), BackgroundPosition.CENTER));
+        borderPane.getStylesheets().addAll("../resources/css/stats.css", "../resources/css/future.css");
 
-        return  borderPane;
+        return borderPane;
     }
 
     public BorderPane classNewCharacter(){
@@ -151,12 +149,12 @@ public class NewFutureView {
         FutureClassDescription classDescription = new FutureClassDescription();
 
         //Button Actions
-        back.setOnMouseClicked(e -> viewService.setMainScene(getNewCharacter(), viewService.isFullScreen()));
+        back.setOnMouseClicked(e -> eventsService.setSceneEvent(getNewCharacter()));
         //--Smart Hero
         smartHero.setOnMouseClicked(e -> {
-            Character character = characterService.createNewCharacter();
-            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(SMART_HERO, 1));
-            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+            PlayerCharacter character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClass(SMART_HERO, 1));
+            eventsService.setSceneEvent(newStatsView.getGuidedStatsPane());
         });
         smartHero.setOnMouseEntered(e -> {
             textArea.clear();
@@ -165,9 +163,9 @@ public class NewFutureView {
 
         //--Strong Hero
         strongHero.setOnMouseClicked(e -> {
-            Character character = characterService.createNewCharacter();
-            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(STRONG_HERO, 1));
-            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+            PlayerCharacter character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClass(STRONG_HERO, 1));
+            eventsService.setSceneEvent(newStatsView.getGuidedStatsPane());
         });
         strongHero.setOnMouseEntered(e -> {
             textArea.clear();
@@ -176,9 +174,9 @@ public class NewFutureView {
 
         //--Fast Hero
         fastHero.setOnMouseClicked(e -> {
-            Character character = characterService.createNewCharacter();
-            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(FAST_HERO, 1));
-            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+            PlayerCharacter character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClass(FAST_HERO, 1));
+            eventsService.setSceneEvent(newStatsView.getGuidedStatsPane());
         });
         fastHero.setOnMouseEntered(e -> {
             textArea.clear();
@@ -187,9 +185,9 @@ public class NewFutureView {
 
         //--Tough Hero
         toughHero.setOnMouseClicked(e -> {
-            Character character = characterService.createNewCharacter();
-            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(TOUGH_HERO, 1));
-            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+            PlayerCharacter character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClass(TOUGH_HERO, 1));
+            eventsService.setSceneEvent(newStatsView.getGuidedStatsPane());
         });
         toughHero.setOnMouseEntered(e -> {
             textArea.clear();
@@ -198,9 +196,9 @@ public class NewFutureView {
 
         //--Charismatic Hero
         charismaticHero.setOnMouseClicked(e -> {
-            Character character = characterService.createNewCharacter();
-            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(CHARISMATIC_HERO, 1));
-            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+            PlayerCharacter character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClass(CHARISMATIC_HERO, 1));
+            eventsService.setSceneEvent(newStatsView.getGuidedStatsPane());
         });
         charismaticHero.setOnMouseEntered(e -> {
             textArea.clear();
@@ -209,9 +207,9 @@ public class NewFutureView {
 
         //--Dedicated Hero
         dedicatedHero.setOnMouseClicked(e -> {
-            Character character = characterService.createNewCharacter();
-            characterService.addCharacterClass(character.getCharacterId(), new CharacterClassImpl(DEDICATED_HERO, 1));
-            viewService.setMainScene(newFutureStatsView.getGuidedStatsPane(), viewService.isFullScreen());
+            PlayerCharacter character = characterService.createNewCharacter();
+            characterService.addCharacterClass(character.getCharacterId(), new CharacterClass(DEDICATED_HERO, 1));
+            eventsService.setSceneEvent(newStatsView.getGuidedStatsPane());
         });
         dedicatedHero.setOnMouseEntered(e -> {
             textArea.clear();
@@ -226,7 +224,7 @@ public class NewFutureView {
         borderPane.setBottom(descriptionBox);
 
         back.getStyleClass().add("back-button");
-        borderPane.getStylesheets().add("../resources/css/stats.css");
+        borderPane.getStylesheets().addAll("../resources/css/stats.css", "../resources/css/future.css");
 
         return borderPane;
     }

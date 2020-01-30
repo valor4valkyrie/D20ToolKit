@@ -1,27 +1,58 @@
 package com.d20.view;
 
+import com.d20.services.EventsService;
 import com.d20.services.ImageService;
 import com.d20.services.ViewService;
+import com.d20.services.FutureViewService;
+import com.d20.view.future.NewFutureView;
+import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.View;
+
 @Component
-public class MainMenu implements MainMenuInt {
+public class MainMenu {
 
-    @Autowired
     private ViewService viewService;
+    private ImageService imageService;
+    private FutureViewService futureViewService;
+    private EventsService eventsService;
 
     @Autowired
-    private ImageService imageService;
+    public MainMenu(ViewService viewService, ImageService imageService, FutureViewService futureViewService, EventsService eventsService) {
+        this.viewService = viewService;
+        this.imageService = imageService;
+        this.futureViewService = futureViewService;
+        this.eventsService = eventsService;
+    }
 
-    public void MainMenu() {}
+    @Autowired
+    public void setImageService(ImageService imageService) {
+        this.imageService = imageService;
+    }
+
+    @Autowired
+    public void setFutureViewService(FutureViewService futureViewService) {
+        this.futureViewService = futureViewService;
+    }
+
+    @Autowired
+    public void setEventsService(EventsService eventsService) {
+        this.eventsService = eventsService;
+    }
 
     public BorderPane getMainMenu(){
 
@@ -29,7 +60,7 @@ public class MainMenu implements MainMenuInt {
         hBox.setSpacing(25);
         hBox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         hBox.getStyleClass().add("hbox");
-        hBox.setMaxSize(viewService.getScreenWidth() - 100, viewService.getScreenHeight() / 2);
+        hBox.setMaxSize(viewService.getScreenWidth() / 2, viewService.getScreenHeight() - 500);
 
         //Button Images
         ImageView mutantsImage = new ImageView(new Image("./images/MutantsMasterminds.jpg"));
@@ -56,14 +87,12 @@ public class MainMenu implements MainMenuInt {
 
         //Actions for the buttons
         futureButton.setOnMouseClicked(e -> {
-            viewService.getFutureView().newFutureView();
-            viewService.setStyle("future");
+            eventsService.setSceneEvent(futureViewService.getFutureCharacterView());
 
         });
         futureButton.setOnKeyPressed(e -> {
             if(e.getCode().toString() == "ENTER"){
-                viewService.getFutureView().newFutureView();
-                viewService.setStyle("future");
+                futureViewService.getFutureCharacterView();
             }
         });
 

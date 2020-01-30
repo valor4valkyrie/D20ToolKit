@@ -110,8 +110,15 @@
 }
 
 .vbox {
+    -fx-border-color: black;
+    -fx-border-width: 5;
     -fx-border-radius: 30;
-    -fx-padding: 15px;
+    -fx-background-radius: 30;
+    -fx-padding: 25;
+    -fx-border-width: 3;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: gray;
 }
 
 .hbox > .button{

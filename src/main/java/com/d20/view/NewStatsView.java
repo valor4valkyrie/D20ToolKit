@@ -1,9 +1,6 @@
 package com.d20.view;
 
-import com.d20.services.CharacterService;
-import com.d20.services.ImageService;
-import com.d20.services.StatsService;
-import com.d20.services.ViewService;
+import com.d20.services.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -11,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.LineTo;
@@ -22,26 +20,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public class NewStatsView extends StatsViewImpl{
+public class NewStatsView extends StatsView{
 
-    @Autowired
     private ViewService viewService;
 
     @Autowired
-    private StatsService statsService;
-
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
-    private CharacterService characterService;
-
-    public NewStatsView() {
+    public NewStatsView(EventsService eventsService, ViewService viewService) {
+        super(eventsService);
+        this.viewService = viewService;
     }
-
-    public NewStatsView(String style) {}
-
-
 
     public Group starShape(){
         Group group = new Group();
@@ -87,7 +74,7 @@ public class NewStatsView extends StatsViewImpl{
 
         pathTransition.play();*/
 
-        viewService.setMainScene(pane, true);
+        viewService.setMainScene(pane);
     }
 
     public void removeNodes(){
@@ -97,7 +84,7 @@ public class NewStatsView extends StatsViewImpl{
         StackPane stack = (StackPane) scrollPane.getChildrenUnmodifiable().get(3);
         stack.getChildren().forEach(each -> each.setVisible(false));
 
-        viewService.setMainScene(borderPane, true);
+        viewService.setMainScene(borderPane);
     }
 
 
@@ -113,7 +100,7 @@ public class NewStatsView extends StatsViewImpl{
         HBox leftBox = new HBox();
         HBox rightBox = new HBox();
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("HelixWarrior"), BackgroundPosition.CENTER));
+        pane.setBackground(new ImageService().createBackgroundImage(new ImageService().getFutureImage("HelixWarrior"), BackgroundPosition.CENTER));
 
         topBox.setAlignment(Pos.CENTER);
         centerBox.setAlignment(Pos.CENTER);
@@ -131,6 +118,8 @@ public class NewStatsView extends StatsViewImpl{
         pane.setBottom(bottomBox);
         pane.setLeft(leftBox);
         pane.setRight(rightBox);
+
+        viewService.setStyle("future");
 
         return pane;
 
@@ -178,16 +167,21 @@ public class NewStatsView extends StatsViewImpl{
         nextStat.getStyleClass().add("navigation-button");
         backStat.getStyleClass().add("navigation-button");
         nextStat.setOnMouseClicked(e -> getGuidedDexterity());
-        backStat.setOnMouseClicked(e -> viewService.setMainScene(getGuidedStatsPane(), true));
+        backStat.setOnMouseClicked(e -> viewService.setMainScene(getGuidedStatsPane()));
 
         bottomBox.getChildren().addAll(backStat, nextStat);
         hBox.getChildren().add(getStatsGuideText("strength"));
-        pane.setCenter(hBox);
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        pane.setRight(hBox);
         pane.setBottom(bottomBox);
+        ImageView image = new ImageService().getFutureImage("HelixWarrior");
+        image.setFitHeight(viewService.getScreenHeight() / 1.15);
+        HBox imageBox =  new HBox();
+        imageBox.setAlignment(Pos.CENTER_RIGHT);
+        imageBox.getChildren().add(image);
+        pane.setLeft(imageBox);
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("HelixWarrior"), BackgroundPosition.CENTER));
-
-        viewService.setMainScene(pane, true);
+        viewService.setMainScene(pane);
     }
 
     public void getGuidedDexterity(){
@@ -207,12 +201,13 @@ public class NewStatsView extends StatsViewImpl{
 
         bottomBox.getChildren().addAll(backStat, nextStat);
         hBox.getChildren().add(getStatsGuideText("dexterity"));
-        pane.setCenter(hBox);
+        pane.setRight(hBox);
         pane.setBottom(bottomBox);
+        ImageView image = new ImageService().getFutureImage("Dogfighter");
+        image.setFitHeight(viewService.getScreenHeight() / 1.15);
+        pane.setLeft(image);
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Dogfighter"), BackgroundPosition.CENTER));
-
-        viewService.setMainScene(pane, true);
+        viewService.setMainScene(pane);
     }
 
     public void getGuidedConstitution(){
@@ -232,12 +227,13 @@ public class NewStatsView extends StatsViewImpl{
 
         bottomBox.getChildren().addAll(backStat, nextStat);
         hBox.getChildren().add(getStatsGuideText("constitution"));
-        pane.setCenter(hBox);
+        pane.setRight(hBox);
         pane.setBottom(bottomBox);
+        ImageView image = new ImageService().getFutureImage("Dreadnought");
+        image.setFitHeight(viewService.getScreenHeight() / 1.15);
+        pane.setLeft(image);
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Dreadnought"), BackgroundPosition.CENTER));
-
-        viewService.setMainScene(pane, true);
+        viewService.setMainScene(pane);
     }
 
     public void getGuidedIntelligence(){
@@ -257,12 +253,13 @@ public class NewStatsView extends StatsViewImpl{
 
         bottomBox.getChildren().addAll(backStat, nextStat);
         hBox.getChildren().add(getStatsGuideText("intelligence"));
-        pane.setCenter(hBox);
+        pane.setRight(hBox);
         pane.setBottom(bottomBox);
+        ImageView image = new ImageService().getFutureImage("Engineer");
+        image.setFitHeight(viewService.getScreenHeight() / 1.15);
+        pane.setLeft(image);
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Engineer"), BackgroundPosition.CENTER));
-
-        viewService.setMainScene(pane, true);
+        viewService.setMainScene(pane);
     }
 
     public void getGuidedWisdom(){
@@ -282,12 +279,13 @@ public class NewStatsView extends StatsViewImpl{
 
         bottomBox.getChildren().addAll(backStat, nextStat);
         hBox.getChildren().add(getStatsGuideText("wisdom"));
-        pane.setCenter(hBox);
+        pane.setRight(hBox);
         pane.setBottom(bottomBox);
+        ImageView image = new ImageService().getFutureImage("Explorer");
+        image.setFitHeight(viewService.getScreenHeight() / 1.15);
+        pane.setLeft(image);
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Explorer"), BackgroundPosition.CENTER));
-
-        viewService.setMainScene(pane, true);
+        viewService.setMainScene(pane);
     }
 
     public void getGuidedCharisma(){
@@ -302,17 +300,18 @@ public class NewStatsView extends StatsViewImpl{
 
         Button nextStat = new Button("Roll My Stats!");
         Button backStat = new Button("Back to Wisdom");
-        nextStat.setOnMouseClicked(e -> viewService.setMainScene(getAllRolledStats(), true));
+        nextStat.setOnMouseClicked(e -> viewService.setMainScene(getAllRolledStats()));
         backStat.setOnMouseClicked(e -> getGuidedWisdom());
 
         bottomBox.getChildren().addAll(backStat, nextStat);
         hBox.getChildren().add(getStatsGuideText("charisma"));
-        pane.setCenter(hBox);
+        pane.setRight(hBox);
         pane.setBottom(bottomBox);
+        ImageView image = new ImageService().getFutureImage("Ambassador");
+        image.setFitHeight(viewService.getScreenHeight() / 1.15);
+        pane.setLeft(image);
 
-        pane.setBackground(imageService.createBackgroundImage(imageService.getFutureImage("Ambassador"), BackgroundPosition.CENTER));
-
-        viewService.setMainScene(pane, true);
+        viewService.setMainScene(pane);
     }
 
 }
