@@ -3,6 +3,7 @@ package com.d20.view;
 import com.d20.model.PlayerCharacter;
 import com.d20.model.Stats;
 import com.d20.services.*;
+import com.google.common.collect.Maps;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,29 +19,26 @@ import org.springframework.core.env.Environment;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class StatsView {
 
     private EventsService eventsService;
 
-    private Environment env;
-
     private HBox hBox = new HBox(15);
     private HBox hBox2 = new HBox(15);
 
-    private Stats stats;
+    private Map<String, Stats> statsMap = Maps.newHashMap();
 
     @Autowired
     public StatsView(EventsService eventsService){
         this.eventsService = eventsService;
     }
 
-    public void setStats(Stats stats){
-        this.stats = stats;
-    }
-
-    public Pane getStatsView(boolean showTemp){
+    public Pane getStatsView(Stats stats, boolean showTemp){
 
         GridPane statsBox = new GridPane();
 
@@ -68,10 +66,6 @@ public class StatsView {
             statsBox.getColumnConstraints().addAll(col, col, col, col, col);
         } else {
             statsBox.getColumnConstraints().addAll(col, col, col);
-        }
-
-        if (stats == null || stats.getStatsList().isEmpty()) {
-            stats = new StatsService().rollAllStats();
         }
 
         stats.getStatsList().forEach(aStat -> {
@@ -144,7 +138,7 @@ public class StatsView {
 
         statVbox.getChildren().add(statsDescBox);
 
-        statVbox.getChildren().add(getStatsView(false));
+        statVbox.getChildren().add(getStatsView(stats, false));
 
         HBox statBox = new HBox();
         statBox.setSpacing(50);
@@ -155,15 +149,17 @@ public class StatsView {
             HBox statsTotal = new HBox(15);
             statsTotal.setAlignment(Pos.CENTER);
             Text statsTotalText = new Text("Ability Totals: ");
-            Text statsTotalValue = new Text(String.valueOf(stats.getStatsTotal()));
+            Text statsTotalValue = new Text(String.valueOf(new StatsService().getStatsTotal(stats)));
 
             Button selectStats = new Button("Select These Stats");
             selectStats.setTextAlignment(TextAlignment.CENTER);
+            selectStats.setId(stats.getId());
+            statsMap.put(stats.getId(), stats);
             selectStats.setOnMouseClicked(event -> {
                 PlayerCharacter character = eventsService.getCharacter();
-                character.setStats(stats);
+                character.setStats(statsMap.get(selectStats.getId()));
                 eventsService.saveCharacter(character);
-                eventsService.setSceneEvent(new CharacterSheetView().getCharacterSheet());
+                eventsService.setSceneEvent(new CharacterSheetView().getCharacterSheetView(character));
                 //viewService.setCharacterSheet(character);
                 //viewService.setMainScene(viewService.getCharacterSheet(-1L), true);
             });
@@ -178,8 +174,6 @@ public class StatsView {
         statVbox.getStyleClass().add("statspane");
 
         flowPane.getChildren().add(statVbox);
-
-        stats.getStatsTotal();
 
         return flowPane;
     }
@@ -208,12 +202,50 @@ public class StatsView {
 
         hBox.setAlignment(Pos.CENTER);
         hBox2.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(15,15,15,15));
-        hBox2.setPadding(new Insets(15,15,15,15));
+        hBox.setPadding(new Insets(30,30,30,30));
+        hBox2.setPadding(new Insets(30,30,30,30));
 
-        hBox.getChildren().addAll(getNewStatsView(new StatsService().rollAllStats(), false, true),
-                getNewStatsView(new StatsService().rollAllStats(), false, true));
-        hBox2.getChildren().add(getNewStatsView(new StatsService().rollAllStats(), false, true));
+        Stats stats1 =  new StatsService().rollAllStats();
+        stats1.setId("1");
+        System.out.println(
+                stats1.getStrength().getStat() + " : " +
+                        stats1.getDexterity().getStat() + " : " +
+                        stats1.getConstitution().getStat() + " : " +
+                        stats1.getIntelligence().getStat() + " : " +
+                        stats1.getWisdom().getStat() + " : " +
+                        stats1.getCharisma().getStat()
+        );
+
+        Stats stats2 =  new StatsService().rollAllStats();
+        stats2.setId("2");
+        System.out.println(
+                stats2.getStrength().getStat() + " : " +
+                        stats2.getDexterity().getStat() + " : " +
+                        stats2.getConstitution().getStat() + " : " +
+                        stats2.getIntelligence().getStat() + " : " +
+                        stats2.getWisdom().getStat() + " : " +
+                        stats2.getCharisma().getStat()
+        );
+
+        Stats stats3 =  new StatsService().rollAllStats();
+        stats3.setId("3");
+        System.out.println(
+                stats3.getStrength().getStat() + " : " +
+                        stats3.getDexterity().getStat() + " : " +
+                        stats3.getConstitution().getStat() + " : " +
+                        stats3.getIntelligence().getStat() + " : " +
+                        stats3.getWisdom().getStat() + " : " +
+                        stats3.getCharisma().getStat()
+        );
+
+        FlowPane stats1View = getNewStatsView(stats1, false, true);
+        FlowPane stats2View = getNewStatsView(stats2, false, true);
+        FlowPane stats3View = getNewStatsView(stats3, false, true);
+
+        hBox.getChildren().addAll(
+                stats1View,
+                stats2View);
+        hBox2.getChildren().add(stats3View);
 
         StringBuilder statsDesc = new StringBuilder();
 

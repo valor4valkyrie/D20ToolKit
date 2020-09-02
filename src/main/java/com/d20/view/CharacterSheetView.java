@@ -1,6 +1,9 @@
 package com.d20.view;
 
+import com.d20.model.PlayerCharacter;
+import com.d20.model.Stats;
 import com.d20.services.EventsService;
+import com.d20.services.StatsService;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -37,10 +40,10 @@ public class CharacterSheetView {
         //characterSheet.setBottom(featsPane);
     }
 
-    public Pane getStats() {
+    public Pane getCharacterSheetStatsView(Stats stats) {
         VBox vBox = new VBox();
         vBox.setMaxSize(700, 250);
-        vBox.getChildren().add(new StatsView(eventsService).getStatsView(false));
+        vBox.getChildren().add(new StatsView(eventsService).getStatsView(stats, false));
         vBox.getStyleClass().add("vBox");
         return vBox;
     }
@@ -55,11 +58,11 @@ public class CharacterSheetView {
         return flowPane;
     }
 
-    public TabPane getCharacterSheet(){
+    public TabPane getCharacterSheetView(PlayerCharacter playerCharacter){
 
         //Stats tab
         FlowPane statsPane = getTabFlowPane();
-        statsPane.getChildren().add(getStats());
+        statsPane.getChildren().add(getCharacterSheetStatsView(playerCharacter.getStats()));
         statsTab.setContent(statsPane);
         statsTab.closableProperty().setValue(false);
 

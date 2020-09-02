@@ -11,6 +11,7 @@ public class Stats implements Serializable {
 
     private final static long serialVersionUID = 1L;
 
+    private String id;
     private Stat strength;
     private Stat dexterity;
     private Stat constitution;
@@ -19,6 +20,14 @@ public class Stats implements Serializable {
     private Stat charisma;
 
     public Stats(){}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Stat getStrength() {
         return strength;
@@ -66,11 +75,6 @@ public class Stats implements Serializable {
 
     public void setCharisma(Stat charisma) {
         this.charisma = charisma;
-    }
-
-    public int getStatsTotal(){
-        return strength.getStat() + dexterity.getStat() + constitution.getStat() + intelligence.getStat()
-                + wisdom.getStat() + charisma.getStat();
     }
 
     public List<Stat> getStatsList(){

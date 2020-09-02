@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class EventsService implements EnvironmentAware {
 
+    private Environment env;
     private ViewService viewService;
     private String statsEndpoint;
     private String password;
 
     @Override
-    public void setEnvironment(Environment environment) {
-        statsEndpoint = environment.getProperty("d20.services.stats.endpoint");
-        password = environment.getProperty("security.jwt.password");
+    public void setEnvironment(Environment env) {
+        this.env = env;
     }
 
     public EventsService(ViewService viewService){
@@ -38,10 +38,10 @@ public class EventsService implements EnvironmentAware {
     }
 
     public void saveCharacter(PlayerCharacter pc){
-        CharacterService characterService = new CharacterService(statsEndpoint, password);
+        StatsService statsService = new StatsService();
 
         if(pc != null) {
-            characterService.sendStats(pc.getStats());
+            statsService.sendStats(pc.getStats(), env);
         }
     }
 

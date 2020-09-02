@@ -73,35 +73,4 @@ public class CharacterService {
         PlayerCharacter character = getCharacter(id);
         character.setStats(stats);
     }
-
-    @Async
-    public void sendStats(Stats stats) {
-
-        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-
-        textEncryptor.setPassword(password);
-
-        String token = textEncryptor.encrypt(password + "-" + LocalDateTime.now().toString());
-
-        Client client = ClientBuilder.newClient();
-        List<String> blah = Lists.newArrayList();
-
-        if(stats != null) {
-            try {
-
-                Response response = client.target(statsEndpoint)
-                        .request(MediaType.APPLICATION_JSON)
-                        .header("JWT", token)
-                        .put(Entity.json(stats));
-
-                if (response.getStatus() != 200) throw new Exception();
-
-            } catch (Exception e) {
-            } finally {
-                client.close();
-            }
-        }
-
-    }
-
 }
